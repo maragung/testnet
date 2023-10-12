@@ -1,20 +1,5 @@
 #!/bin/bash
 
-
-echo -e "\033[32m"
-cat << "EOF"
-   dP                              oo         
-      88                                         
-.d888b88 .d8888b. dP  dP  dP 88d888b. dP 88d888b.
-88'  `88 88ooood8 88  88  88 88'  `88 88 88'  `88
-88.  .88 88.  ... 88.88b.88' 88       88 88    88
-`88888P8 `88888P' 8888P Y8P  dP       dP dP    dP
-                                                 
-                                                 
-EOF
-echo -e "\033[0m"
-
-
 apt-get install cron curl
 
 # Warna ANSI
