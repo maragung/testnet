@@ -1,9 +1,11 @@
 #!/bin/bash
 
-KEY_PAIR_FILE=~/keys/keypair
-KEYS_FILE=~/keys/my-wallet
-KEYS_FILE_PUB=~/keys/my-wallet.pub
-
+export KEY_PAIR_FILE=~/keys/keypair
+export KEYS_FILE=~/keys/my-wallet
+export KEYS_FILE_PUB=~/keys/my-wallet.pub
+source ~/.bashrc
+source ~/.profile
+    
 install_dependencies() {
     echo "Installing dependencies..."
     wget http://nz2.archive.ubuntu.com/ubuntu/pool/main/o/openssl/libssl1.1_1.1.1f-1ubuntu2.19_amd64.deb
@@ -97,24 +99,91 @@ save_to_keypair() {
     echo "Keypair location: $KEY_PAIR_FILE"
 }
 
+
+create_service_file() {
+    SERVICE_FILE="/etc/systemd/system/mina.service"
+    echo "Creating the Mina service file..."
+    cat <<EOF >"$SERVICE_FILE"
+[Unit]
+Description=Mina Protocol
+After=network.target
+
+[Service]
+User=root
+Environment="RAYON_NUM_THREADS=6"
+EnvironmentFile=-/root/.bash_profile
+ExecStart=/bin/bash -c '/usr/local/bin/mina daemon --peer-list-url https://storage.googleapis.com/seed-lists/testworld-2-0_seeds.txt --log-json --log-snark-work-gossip true --internal-tracing --insecure-rest-server --log-level Debug --file-log-level Debug --config-directory /root/.mina --external-ip '\$IP_ADDRESS' --itn-keys f1F38+W3zLcc45fGZcAf9gsZ7o9Rh3ckqZQw6yOJiS4=,6GmWmMYv5oPwQd2xr6YArmU1YXYCAxQAxKH7aYnBdrk=,ZJDkF9EZlhcAU1jyvP3m9GbkhfYa0yPV+UdAqSamr1Q=,NW2Vis7S5G1B9g2l9cKh3shy9qkI1lvhid38763vZDU=,Cg/8l+JleVH8yNwXkoLawbfLHD93Do4KbttyBS7m9hQ= --itn-graphql-port 3089 --uptime-submitter-key '\$UPTIME_PRIVKEY_PASS' --uptime-url https://block-producers-uptime-itn.minaprotocol.tools/v1/submit --metrics-port 10001 --enable-peer-exchange true --libp2p-keypair '\$KEY_PAIR_FILE' --log-precomputed-blocks true --max-connections 200 --generate-genesis-proof true --block-producer-key '\$KEYS_FILE' --node-status-url https://nodestats-itn.minaprotocol.tools/submit/stats --node-error-url https://nodestats-itn.minaprotocol.tools/submit/stats --file-log-rotations 500'
+Restart=always
+RestartSec=3
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+    echo "Service file created at $SERVICE_FILE"
+}
+
+
+
+
+
+handle_services_systemd_menu() {
+    local choice
+    while true; do
+        read -p "Enter your choice: " choice
+        case $choice in
+            1)
+                echo "You chose to install the service."
+                create_service_file
+                sudo systemctl reload-daemon
+                sudo systemctl enable mina
+                sudo systemctl start mina
+                ;;
+            2)
+                echo "You chose to restart the service."
+                sudo systemctl restart mina
+                ;;
+            3)
+                echo "You chose to stop the service."
+                sudo systemctl stop mina
+                ;;
+            4)
+                echo "You chose to check the service status."
+                sudo systemctl status mina
+                ;;
+            5)
+                echo "You chose to check the service log."
+                sudo journalctl -u mina -n 1000 -f
+                ;;
+            6)
+                echo "You chose to remove the service."
+                sudo systemctl stop mina
+                sudo systemctl disable mina
+                sudo systemctl daemon-reload mina
+                ;;
+            *)
+                echo "Invalid choice. Please try again."
+                ;;
+        esac
+    done
+}
+
 display_menu() {
     echo "Mina Manager"
     echo "1. Install Mina and dependencies"
     echo "2. Set Key & Password"
-    echo "3. Remove Mina"
-    echo "4. Exit"
+    echo "3. Services/Systemd"
+    echo "4. Remove Mina"
+    echo "5. Exit"
 }
 
-# Display the menu
-display_menu
-
 while true; do
-    read -p "Enter your choice: " choice
-    case $choice in
+    display_menu
+    read -p "Enter your choice: " main_choice
+    case $main_choice in
         1)
             install_dependencies
             install_mina
-            break
             ;;
         2)
             save_to_wallet
@@ -122,13 +191,15 @@ while true; do
             save_to_wallet_password
             save_to_ip
             save_to_keypair
-            break
             ;;
         3)
-            remove_mina
-            break
+            services_systemd_menu
+            handle_services_systemd_menu
             ;;
         4)
+            remove_mina
+            ;;
+        5)
             exit 0
             ;;
         *)
