@@ -24,6 +24,8 @@ install_mina() {
     echo "deb [trusted=yes] http://packages.o1test.net/ buster rampup" | sudo tee /etc/apt/sources.list.d/mina-rampup.list
     sudo apt-get update
     sudo apt-get install -y mina-berkeley=2.0.0rampup5-55b7818
+    which mina
+    mina version
     echo "Mina installed successfully."
 }
 
