@@ -148,28 +148,35 @@ handle_services_systemd_menu() {
                 sudo systemctl daemon-reload
                 sudo systemctl enable mina
                 sudo systemctl start mina
+                exit 0
                 ;;
             2)
                 echo "You chose to restart the service."
                 sudo systemctl restart mina
+                pkill -f mina
+                exit 0
                 ;;
             3)
                 echo "You chose to stop the service."
                 sudo systemctl stop mina
+                exit 0
                 ;;
             4)
                 echo "You chose to check the service status."
                 sudo systemctl status mina
+                exit 0
                 ;;
             5)
                 echo "You chose to check the service log."
                 sudo journalctl -u mina -n 1000 -f
+                exit 0
                 ;;
             6)
                 echo "You chose to remove the service."
                 sudo systemctl stop mina
                 sudo systemctl disable mina
                 sudo systemctl daemon-reload
+                exit 0
                 ;;
             *)
                 echo "Invalid choice. Please try again."
@@ -183,8 +190,9 @@ display_menu() {
     echo "1. Install Mina and dependencies"
     echo "2. Set Key & Password"
     echo "3. Services/Systemd"
-    echo "4. Remove Mina"
-    echo "5. Exit"
+    echo "4. Mina Status"
+    echo "5. Remove Mina"
+    echo "6. Exit"
 }
 
 while true; do
@@ -194,6 +202,7 @@ while true; do
         1)
             install_dependencies
             install_mina
+            exit 0
             ;;
         2)
             save_to_wallet
@@ -201,15 +210,22 @@ while true; do
             save_to_wallet_password
             save_to_ip
             save_to_keypair
+            exit 0
             ;;
         3)
             services_systemd_menu
             handle_services_systemd_menu
+            exit 0
             ;;
         4)
-            remove_mina
+            mina client status
+            exit 0
             ;;
         5)
+            remove_mina
+            exit 0
+            ;;
+        6)
             exit 0
             ;;
         *)
