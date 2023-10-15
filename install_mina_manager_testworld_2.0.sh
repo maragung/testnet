@@ -26,6 +26,8 @@ install_mina() {
     sudo apt-get install -y mina-berkeley=2.0.0rampup5-55b7818
     which mina
     mina version
+    mkdir ~/keys -p
+    chmod 700 ~/keys
     echo "Mina installed successfully."
 }
 
