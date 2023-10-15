@@ -7,6 +7,9 @@ check_existing_swap() {
 
 resize_swap() {
     if [ -e /swapfile ]; then
+        echo "Disabling the swap file before resizing..."
+        sudo swapoff /swapfile
+
         read -p "Enter the new swap size in gigabytes (e.g., 4 for 4GB): " new_swap_size_gb
         new_swap_size_mb=$((new_swap_size_gb * 1024))
 
@@ -25,6 +28,7 @@ resize_swap() {
         echo "No swap file found. Please create a swap file first."
     fi
 }
+
 
 create_swap() {
     if [ -e /swapfile ]; then
