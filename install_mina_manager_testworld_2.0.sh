@@ -100,30 +100,31 @@ save_to_keypair() {
 }
 
 
-create_service_file() {
-    SERVICE_FILE="/etc/systemd/system/mina.service"
-    echo "Creating the Mina service file..."
-    cat <<EOF >"$SERVICE_FILE"
+SERVICE_FILE="/etc/systemd/system/mina.service"
+
+generate_service_file() {
+    cat <<EOL >"$SERVICE_FILE"
 [Unit]
 Description=Mina Protocol
 After=network.target
 
 [Service]
 User=root
-Environment="RAYON_NUM_THREADS=6"
-EnvironmentFile=-/root/.bash_profile
-ExecStart=/bin/bash -c '/usr/local/bin/mina daemon --peer-list-url https://storage.googleapis.com/seed-lists/testworld-2-0_seeds.txt --log-json --log-snark-work-gossip true --internal-tracing --insecure-rest-server --log-level Debug --file-log-level Debug --config-directory /root/.mina --external-ip '\$IP_ADDRESS' --itn-keys f1F38+W3zLcc45fGZcAf9gsZ7o9Rh3ckqZQw6yOJiS4=,6GmWmMYv5oPwQd2xr6YArmU1YXYCAxQAxKH7aYnBdrk=,ZJDkF9EZlhcAU1jyvP3m9GbkhfYa0yPV+UdAqSamr1Q=,NW2Vis7S5G1B9g2l9cKh3shy9qkI1lvhid38763vZDU=,Cg/8l+JleVH8yNwXkoLawbfLHD93Do4KbttyBS7m9hQ= --itn-graphql-port 3089 --uptime-submitter-key '\$UPTIME_PRIVKEY_PASS' --uptime-url https://block-producers-uptime-itn.minaprotocol.tools/v1/submit --metrics-port 10001 --enable-peer-exchange true --libp2p-keypair '\$KEY_PAIR_FILE' --log-precomputed-blocks true --max-connections 200 --generate-genesis-proof true --block-producer-key '\$KEYS_FILE' --node-status-url https://nodestats-itn.minaprotocol.tools/submit/stats --node-error-url https://nodestats-itn.minaprotocol.tools/submit/stats --file-log-rotations 500'
+Environment=RAYON_NUM_THREADS=6
+Environment=UPTIME_PRIVKEY_PASS=$UPTIME_PRIVKEY_PASS
+Environment=MINA_LIBP2P_PASS=$MINA_LIBP2P_PASS
+Environment=MINA_PRIVKEY_PASS=$MINA_PRIVKEY_PASS
+Environment=IP_ADDRESS=$IP_ADDRESS
+Environment=KEY_PAIR_FILE=$KEY_PAIR_FILE
+Environment=KEYS_FILE=$KEYS_FILE
+ExecStart=/usr/local/bin/mina daemon --peer-list-url https://storage.googleapis.com/seed-lists/testworld-2-0_seeds.txt --log-json --log-snark-work-gossip true --internal-tracing --insecure-rest-server --log-level Debug --file-log-level Debug --config-directory /root/.mina --external-ip \$IP_ADDRESS --itn-keys f1F38+W3zLcc45fGZcAf9gsZ7o9Rh3ckqZQw6yOJiS4=,6GmWmMYv5oPwQd2xr6YArmU1YXYCAxQAxKH7aYnBdrk=,ZJDkF9EZlhcAU1jyvP3m9GbkhfYa0yPV+UdAqSamr1Q=,NW2Vis7S5G1B9g2l9cKh3shy9qkI1lvhid38763vZDU=,Cg/8l+JleVH8yNwXkoLawbfLHD93Do4KbttyBS7m9hQ= --itn-graphql-port 3089 --uptime-submitter-key \$UPTIME_PRIVKEY_PASS --uptime-url https://block-producers-uptime-itn.minaprotocol.tools/v1/submit --metrics-port 10001 --enable-peer-exchange true --libp2p-keypair \$KEY_PAIR_FILE --log-precomputed-blocks true --max-connections 200 --generate-genesis-proof true --block-producer-key \$KEYS_FILE --node-status-url https://nodestats-itn.minaprotocol.tools/submit/stats --node-error-url https://nodestats-itn.minaprotocol.tools/submit/stats --file-log-rotations 500
 Restart=always
 RestartSec=3
 
 [Install]
 WantedBy=multi-user.target
-EOF
-
-    echo "Service file created at $SERVICE_FILE"
+EOL
 }
-
-
 
 services_systemd_menu() {
     echo "Services/Systemd Menu"
@@ -143,8 +144,8 @@ handle_services_systemd_menu() {
         case $choice in
             1)
                 echo "You chose to install the service."
-                create_service_file
-                sudo systemctl reload-daemon
+                generate_service_file
+                sudo systemctl daemon-reload
                 sudo systemctl enable mina
                 sudo systemctl start mina
                 ;;
@@ -168,7 +169,7 @@ handle_services_systemd_menu() {
                 echo "You chose to remove the service."
                 sudo systemctl stop mina
                 sudo systemctl disable mina
-                sudo systemctl daemon-reload mina
+                sudo systemctl daemon-reload
                 ;;
             *)
                 echo "Invalid choice. Please try again."
