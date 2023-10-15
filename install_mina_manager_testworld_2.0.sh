@@ -63,17 +63,18 @@ save_to_wallet_password() {
     echo -n "Enter the value for MINA_PRIVKEY_PASS: "
     read MINA_PRIVKEY_PASS
 
-    echo "export RAYON_NUM_THREADS=6" >> ~/.bash_profile
-    echo "export UPTIME_PRIVKEY_PASS=\"$UPTIME_PRIVKEY_PASS\"" >> ~/.bash_profile
-    echo "export MINA_LIBP2P_PASS=\"$MINA_LIBP2P_PASS\"" >> ~/.bash_profile
-    echo "export MINA_PRIVKEY_PASS=\"$MINA_PRIVKEY_PASS\"" >> ~/.bash_profile
-
+    export RAYON_NUM_THREADS=6
+    export UPTIME_PRIVKEY_PASS="$UPTIME_PRIVKEY_PASS"
+    export MINA_LIBP2P_PASS="$MINA_LIBP2P_PASS"
+    export MINA_PRIVKEY_PASS="$MINA_PRIVKEY_PASS"
+    source ~/.bashrc
+    source ~/.profile
     echo "Variables have been set and saved in ~/.bash_profile"
 }
 
 save_to_ip() {
     # Get the current IP address and recommend it
-    CURRENT_IP=$(curl -s ifconfig.me)
+    CURRENT_IP=$(curl -s ipinfo.io/ip)
     echo "The current IP address is: $CURRENT_IP"
     echo -n "Do you want to use this IP address? (y/n): "
     read USE_CURRENT_IP
@@ -82,7 +83,7 @@ save_to_ip() {
     if [ "$USE_CURRENT_IP" == "y" ]; then
       IP_ADDRESS=$CURRENT_IP
     else
-      echo -n "Enter the IP address you want to use: "
+      echo -n "Enter the Your IP Address: "
       read IP_ADDRESS
     fi
     echo "export IP_ADDRESS=\"$IP_ADDRESS\"" >> ~/.bash_profile
