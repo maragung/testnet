@@ -125,6 +125,15 @@ EOF
 
 
 
+services_systemd_menu() {
+    echo "Services/Systemd Menu"
+    echo "1. Install Service"
+    echo "2. Restart Service"
+    echo "3. Stop Service"
+    echo "4. Check Service Status"
+    echo "5. Check Service Log"
+    echo "6. Remove Service"
+}
 
 
 handle_services_systemd_menu() {
