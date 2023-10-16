@@ -14,6 +14,7 @@ echo -e "\033[0m"
 
 install_dependencies() {
     echo "Installing dependencies..."
+    apt-get install curl, wget, jq
     wget http://nz2.archive.ubuntu.com/ubuntu/pool/main/o/openssl/libssl1.1_1.1.1f-1ubuntu2.19_amd64.deb
     sudo dpkg -i libssl1.1_1.1.1f-1ubuntu2.19_amd64.deb
 
