@@ -39,8 +39,10 @@ install_mina() {
       CODENAME="$LSB_CODENAME"
     fi
 
+    GREEN='\033[0;32m'
+    NC='\033[0m'  # No Color
     # Update the repository with the appropriate codename
-    echo "Using codename: $CODENAME"
+    echo -e "Using codename: ${GREEN}$CODENAME${NC}"
     echo "Removing sources.list.d files for Mina..."
     sudo rm /etc/apt/sources.list.d/mina*.list
     echo "Adding repository for Mina with codename: $CODENAME"
@@ -56,4 +58,5 @@ install_mina() {
 
 
 install_dependencies
+sleep 3
 install_mina
