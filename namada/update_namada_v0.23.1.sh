@@ -1,3 +1,4 @@
+#!/bin/bash
 echo "Downloading updated files......"
 wget https://github.com/anoma/namada/releases/download/v0.23.1/namada-v0.23.1-Linux-x86_64.tar.gz
 tar xvzf namada-v0.23.1-Linux-x86_64.tar.gz
