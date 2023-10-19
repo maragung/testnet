@@ -31,13 +31,13 @@ unit_content="[Unit]
 Description=Testworld Mina Bot Service
 
 [Service]
-ExecStart=/usr/bin/node $current_dir/index.js
+ExecStart=$current_dir/run.sh
 Restart=always
 User=$current_user
 Group=$current_group
 Environment=PATH=/usr/bin:/usr/local/bin
 Environment=NODE_ENV=production
-WorkingDirectory=$current_dir/app
+WorkingDirectory=$current_dir
 
 [Install]
 WantedBy=multi-user.target
