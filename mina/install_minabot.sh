@@ -15,6 +15,7 @@ echo "This is Mina Bot, used to monitor Mina Nodes in Testworld 2.0. Type /start
 sleep 3
 git clone https://github.com/maragung/testworld_bot
 cd testworld_bot
+sudo chmod +x run.sh
 read -p "Enter Bot TOKEN (Telegram): " new_token
 sed -i "s/const TOKEN = \"\"/const TOKEN = \"$new_token\"/g" index.js
 echo "TOKEN has been updated to: $new_token"
