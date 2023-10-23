@@ -19,5 +19,6 @@ sudo apt-get install -y mina-berkeley=2.0.0rampup6-4061884
 echo "Mina node has been updated successfully."
 mina version
 sudo systemctl start mina
+
 echo "To restart the Mina service, use: sudo systemctl restart mina"
 echo "To check the status of the Mina service, use: sudo systemctl status mina"
