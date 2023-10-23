@@ -22,3 +22,5 @@ sudo systemctl start mina
 
 echo "To restart the Mina service, use: sudo systemctl restart mina"
 echo "To check the status of the Mina service, use: sudo systemctl status mina"
+echo "Read node logs, use: sudo journalctl -u mina -n 1000 -f"
+echo "Read mina status, use: mina client status"
