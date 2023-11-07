@@ -22,8 +22,8 @@ sudo apt-get install curl wget jq screen
 
 # Download and install libssl1.1 package
 echo "Downloading and installing libssl1.1 package..."
-wget http://nz2.archive.ubuntu.com/ubuntu/pool/main/o/openssl/libssl1.1_1.1.1f-1ubuntu2.19_amd64.deb
-sudo dpkg -i libssl1.1_1.1.1f-1ubuntu2.19_amd64.deb
+wget http://archive.ubuntu.com/ubuntu/pool/main/o/openssl/libssl1.1_1.1.1f-1ubuntu2_amd64.deb
+sudo dpkg -i libssl1.1_1.1.1f-1ubuntu2_amd64.deb
 
 # Download and extract cometbft application
 echo "Downloading and extracting cometbft application..."
@@ -41,6 +41,6 @@ sudo cp ./namada* /usr/local/bin/
 
 # Clean up downloaded files (optional)
 echo "Cleaning up downloaded files (optional)..."
-rm libssl1.1_1.1.1f-1ubuntu2.19_amd64.deb cometbft_0.37.2_linux_amd64.tar.gz namada-v0.23.0-Linux-x86_64.tar.gz
+rm libssl1.1_1.1.1f-1ubuntu2_amd64.deb cometbft_0.37.2_linux_amd64.tar.gz namada-v0.23.0-Linux-x86_64.tar.gz
 
 echo "Installation completed."
