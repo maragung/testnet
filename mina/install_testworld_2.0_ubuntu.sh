@@ -15,13 +15,13 @@ echo -e "\033[0m"
 install_dependencies() {
     echo "Installing dependencies..."
     apt-get install curl wget jq
-    wget http://nz2.archive.ubuntu.com/ubuntu/pool/main/o/openssl/libssl1.1_1.1.1f-1ubuntu2.19_amd64.deb
+    wget -O libssl1.1_1.1.1f-1ubuntu2_amd64.deb	http://archive.ubuntu.com/ubuntu/pool/main/o/openssl/libssl1.1_1.1.1f-1ubuntu2_amd64.deb
     sudo dpkg -i libssl1.1_1.1.1f-1ubuntu2.19_amd64.deb
 
-    wget https://mirrors.edge.kernel.org/ubuntu/pool/main/libf/libffi/libffi6_3.2.1-8_amd64.deb
+    wget -O libffi6_3.2.1-9_amd64.deb https://ftp.debian.org/debian/pool/main/libf/libffi/libffi6_3.2.1-9_amd64.deb
     sudo dpkg -i libffi6_3.2.1-8_amd64.deb
 
-    wget http://ftp.de.debian.org/debian/pool/main/p/procps/libprocps7_3.3.15-2_amd64.deb
+    wget -O libprocps7_3.3.15-2_amd64.deb http://ftp.de.debian.org/debian/pool/main/p/procps/libprocps7_3.3.15-2_amd64.deb
     sudo dpkg -i libprocps7_3.3.15-2_amd64.deb
 
     rm *.deb
