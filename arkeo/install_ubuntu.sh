@@ -15,7 +15,7 @@ sudo sysctl -p
 sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin -y
 
 sudo rm -rf /usr/local/.go
-wget -O https://go.dev/dl/go1.19.2.linux-amd64.tar.gz
+wget -O go1.19.2.linux-amd64.tar.gz https://go.dev/dl/go1.19.2.linux-amd64.tar.gz
 sudo tar -C /usr/local -xzf go1.19.2.linux-amd64.tar.gz
 sudo cp /usr/local/go /usr/local/.go -r
 sudo rm -rf /usr/local/go
