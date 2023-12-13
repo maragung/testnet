@@ -24,6 +24,9 @@ fi
 # Combining IP with port
 IP="$IP_SUFFIX:26656"
 
+# Generate pre-genesis key after confirmation
+namadaw --pre-genesis key gen --alias $ALIAS
+
 # Path for the transactions.toml file
 TX_FILE_PATH="$HOME/.local/share/namada/pre-genesis/transactions.toml"
 
@@ -31,8 +34,6 @@ TX_FILE_PATH="$HOME/.local/share/namada/pre-genesis/transactions.toml"
 ESTABLISHED_ACCOUNT=$(namadac utils init-genesis-established-account --path $TX_FILE_PATH --aliases $ALIAS)
 ESTABLISHED_ACCOUNT_ADDRESS=$(echo "$ESTABLISHED_ACCOUNT" | grep -oP 'Account address: \K(.*)')
 
-# Generate pre-genesis key after confirmation
-namadaw --pre-genesis key gen --alias $ALIAS
 
 # Initialize validator
 namadac utils init-genesis-validator --address $ESTABLISHED_ACCOUNT_ADDRESS --alias $VALIDATOR_ALIAS --net-address $IP --commission-rate 0.05 --max-commission-rate-change 0.01 --self-bond-amount $SELF_BOND_AMOUNT --email $EMAIL --path $TX_FILE_PATH
