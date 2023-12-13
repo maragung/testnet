@@ -33,12 +33,15 @@ TX_FILE_PATH="$HOME/.local/share/namada/pre-genesis/transactions.toml"
 # Execute the command once to get the established account address
 ESTABLISHED_ACCOUNT=$(namadac utils init-genesis-established-account --path $TX_FILE_PATH --aliases $ALIAS)
 wait
-ESTABLISHED_ACCOUNT_ADDRESS=$(echo "$ESTABLISHED_ACCOUNT" | grep -oP 'Account address: \K(.*)')
+ESTABLISHED_ACCOUNT_ADDRESS=$(echo "$ESTABLISHED_ACCOUNT" | grep -oP 'Derived established account address: \K(.*)')
+
+echo "ESTABLISHED_ACCOUNT_ADDRESS: $ESTABLISHED_ACCOUNT_ADDRESS"
 
 
 # Initialize validator
-namadac utils init-genesis-validator --address $ESTABLISHED_ACCOUNT_ADDRESS --alias $VALIDATOR_ALIAS --net-address $IP --commission-rate 0.05 --max-commission-rate-change 0.01 --self-bond-amount $SELF_BOND_AMOUNT --email $EMAIL --path $TX_FILE_PATH
+INIT_GENESIS=$(namadac utils init-genesis-validator --address $ESTABLISHED_ACCOUNT_ADDRESS --alias $VALIDATOR_ALIAS --net-address $IP --commission-rate 0.05 --max-commission-rate-change 0.01 --self-bond-amount $SELF_BOND_AMOUNT --email $EMAIL --path $TX_FILE_PATH)
 wait
+echo "INIT_GENESIS: $INIT_GENESIS"
 # Sign transactions
 namadac utils sign-genesis-txs \
     --path $TX_FILE_PATH \
