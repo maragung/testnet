@@ -43,6 +43,10 @@ ExecStop=/usr/local/bin/mina client stop-daemon
 WantedBy=default.target
 EOF
 
+sudo systemctl daemon-reload
+wait
+sudo systemctl enable mina
+wait
 echo "Mina service has been created successfully."
 
 echo "To start the Mina service, use: sudo systemctl start mina"
