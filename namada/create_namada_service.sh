@@ -7,7 +7,9 @@ cd /etc/systemd/system/
 if [ -f namadad.service ]; then
   echo "Deleting the existing 'namadad.service' service."
   sudo systemctl stop namadad
+  wait
   sudo systemctl disable namadad
+  wait
   sudo rm namadad.service
 fi
 
@@ -38,11 +40,14 @@ EOL
 
 # Reload systemd
 sudo systemctl daemon-reload
+wait
 
 # Enable and start the service
 cd
 sudo systemctl enable namadad
+wait
 sudo systemctl start namadad
+wait
 
 echo "The 'namadad' service has been recreated and re-enabled."
 echo "To restart service: sudo systemctl start namadad"
