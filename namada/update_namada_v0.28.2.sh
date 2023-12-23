@@ -8,6 +8,7 @@ echo "Stopping service..."
 sudo systemctl stop namadad
 wait
 sudo cp ./namada* /usr/local/bin/
+namada -V
 wait
 sudo systemctl start namadad
 wait
