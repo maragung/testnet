@@ -24,6 +24,7 @@ fi
 # Clone the repository from GitHub
 git clone https://github.com/maragung/namada-bot "namada-bot"
 cd "$current_directory/namada-bot"
+sudo chmod +x run.sh
 
 # Get input for telegramToken from the user
 read -p "Enter the telegramToken value: " telegramToken
