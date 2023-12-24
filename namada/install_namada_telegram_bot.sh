@@ -7,6 +7,20 @@ current_directory=$PWD
 default_user=$(id -u -n)
 default_group=$(id -g -n)
 
+if [ -d "$current_directory/namada-bot" ]; then
+    read -p "Folder 'namada-bot' already exists. Do you want to delete it? (y/n): " delete_folder
+    if [ "$delete_folder" = "y" ]; then
+        # Remove the 'namada-bot' folder and its contents
+        rm -rf "$current_directory/namada-bot"
+        echo "Folder 'namada-bot' deleted."
+    else
+        echo "Skipping deletion of 'namada-bot' folder."
+        exit
+    fi
+fi
+
+
+
 # Clone the repository from GitHub
 git clone https://github.com/maragung/namada-bot "namada-bot"
 cd "$current_directory/namada-bot"
