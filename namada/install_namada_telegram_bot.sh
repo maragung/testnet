@@ -26,6 +26,14 @@ EOF
 
 # Continue with installing dependencies using npm
 npm install
+wait
+
+if [ -f /etc/systemd/system/namada-bot.service ]; then
+    sudo systemctl stop namada-bot
+    wait
+    sudo systemctl disable namada-bot
+    sudo rm /etc/systemd/system/namada-bot.service
+fi
 
 # Create the service file in the systemd directory to run "node index.js"
 cat <<EOF | sudo tee /etc/systemd/system/namada-bot.service >/dev/null
@@ -48,7 +56,9 @@ EOF
 
 
 # Start the service and enable it to run at boot
-sudo systemctl start namada-bot
+sudo systemctl daemon-reload
 sudo systemctl enable namada-bot
+sudo systemctl start namada-bot
+
 
 echo "Installation completed. The 'namada-bot' service has been started."
