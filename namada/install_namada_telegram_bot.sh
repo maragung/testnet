@@ -34,7 +34,7 @@ Description=Service to run Namada Bot
 
 [Service]
 ExecStart=/usr/bin/node index.js
-WorkingDirectory=$current_directory/namada-bot
+WorkingDirectory=$current_directory/namada-bot  # Perbaikan pada jalur direktori di sini
 Restart=always
 RestartSec=10
 User=$default_user
@@ -45,6 +45,7 @@ Environment=NODE_ENV=production
 [Install]
 WantedBy=multi-user.target
 EOF
+
 
 # Start the service and enable it to run at boot
 sudo systemctl start namada-bot
