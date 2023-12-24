@@ -3,10 +3,6 @@
 # Get the directory where the script is located
 current_directory=$PWD
 
-# Get the default user and group
-default_user=$(id -u -n)
-default_group=$(id -g -n)
-
 if [ -d "$current_directory/namada-bot" ]; then
     read -p "Folder 'namada-bot' already exists. Do you want to delete it? (y/n): " delete_folder
     if [ "$delete_folder" = "y" ]; then
@@ -59,29 +55,39 @@ if [ -f /etc/systemd/system/namada-bot.service ]; then
     sudo systemctl daemon-reload
 fi
 
-# Create the service file in the systemd directory to run "node index.js"
-cat <<EOF | sudo tee /etc/systemd/system/namada-bot.service >/dev/null
+
+CURRENT_PATH=$(pwd)
+CURRENT_USER=$(id -u -n)
+CURRENT_GROUP=$(id -g -n)
+
+SERVICE_NAME="namada-bot"
+
+# Membuat file unit service
+SERVICE_FILE="/etc/systemd/system/$SERVICE_NAME.service"
+
+# Isi file unit service
+cat <<EOF > $SERVICE_FILE
 [Unit]
-Description=Service to run Namada Bot
+Description=Namada Telegram Bot
+After=network.target
 
 [Service]
-ExecStart=$current_directory/namada-bot/run.sh
+User=$CURRENT_USER
+Group=$CURRENT_GROUP
+WorkingDirectory=$CURRENT_PATH
+ExecStart=/usr/bin/node $CURRENT_PATH/index.js
 Restart=always
-RestartSec=10
-User=$default_user
-Group=$default_group
-Environment=PATH=/usr/bin:/usr/local/bin
-Environment=NODE_ENV=production
 
 [Install]
 WantedBy=multi-user.target
 EOF
 
 
-# Start the service and enable it to run at boot
+chmod 644 $SERVICE_FILE
+
 sudo systemctl daemon-reload
-sudo systemctl enable namada-bot
-sudo systemctl start namada-bot
+sudo systemctl enable $SERVICE_NAME
+sudo systemctl start $SERVICE_NAME
+sudo systemctl status $SERVICE_NAME
 
 
-echo "Installation completed. The 'namada-bot' service has been started."
