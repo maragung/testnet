@@ -1,14 +1,14 @@
 #!/bin/bash
 
 # Get the directory where the script is located
-current_directory=$(dirname "$0")
+current_directory=$PWD
 
 # Get the default user and group
 default_user=$(id -u -n)
 default_group=$(id -g -n)
 
 # Clone the repository from GitHub
-git clone https://github.com/maragung/namada-bot "$current_directory/namada-bot"
+git clone https://github.com/maragung/namada-bot "namada-bot"
 cd "$current_directory/namada-bot"
 
 # Get input for telegramToken from the user
@@ -41,7 +41,7 @@ cat <<EOF | sudo tee /etc/systemd/system/namada-bot.service >/dev/null
 Description=Service to run Namada Bot
 
 [Service]
-ExecStart=/usr/bin/node $current_directory/namada-bot/index.js
+ExecStart=/usr/bin/node $current_directory/index.js
 Restart=always
 RestartSec=10
 User=$default_user
