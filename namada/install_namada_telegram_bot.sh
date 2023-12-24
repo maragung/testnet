@@ -28,9 +28,10 @@ wait
 cd "$current_directory/namada-bot"
 
 
-echo 'node "$PWD/namada-bot/index.js"' > "$current_directory/namada-bot/run.sh"
-chmod +x "$current_directory/namada-bot/run.sh"
+echo "node \"$PWD/namada-bot/index.js\"" > "$current_directory/namada-bot/run.sh"
 
+# Add execute permission to the run.sh file
+chmod +x "$current_directory/namada-bot/run.sh"
 
 # Get input for telegramToken from the user
 read -p "Enter the Telegram Bot Token value: " telegramToken
