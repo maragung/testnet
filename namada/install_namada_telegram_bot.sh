@@ -18,6 +18,7 @@ if [ -d "$current_directory/namada-bot" ]; then
         exit
     fi
 fi
+wait
 
 
 
@@ -26,14 +27,16 @@ git clone https://github.com/maragung/namada-bot "namada-bot"
 wait
 cd "$current_directory/namada-bot"
 
-echo "#!/bin/bash" > "$current_directory/namada-bot/run.sh"
-echo "" >> "$current_directory/namada-bot/run.sh"
-echo 'node "$PWD/index.js"' >> "$current_directory/namada-bot/run.sh"
+
+echo 'node "$current_directory/namada-bot/index.js"' > "$current_directory/namada-bot/run.sh"
+wait
+# Add execute permission to the run.sh file
 chmod +x "$current_directory/namada-bot/run.sh"
 
 
 # Get input for telegramToken from the user
 read -p "Enter the Telegram Bot Token value: " telegramToken
+wait
 
 # Create the config.json file with the provided telegramToken value
 cat <<EOF >config.json
