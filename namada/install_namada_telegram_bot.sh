@@ -24,7 +24,9 @@ fi
 # Clone the repository from GitHub
 git clone https://github.com/maragung/namada-bot "namada-bot"
 cd "$current_directory/namada-bot"
-sudo chmod +x run.sh
+
+echo 'node "$PWD/namada-bot/index.js"' > "$PWD/namada-bot/run.sh"
+chmod +x "$PWD/namada-bot/run.sh"
 
 # Get input for telegramToken from the user
 read -p "Enter the telegramToken value: " telegramToken
@@ -48,6 +50,7 @@ if [ -f /etc/systemd/system/namada-bot.service ]; then
     wait
     sudo systemctl disable namada-bot
     sudo rm /etc/systemd/system/namada-bot.service
+    sudo systemctl daemon-reload
 fi
 
 # Create the service file in the systemd directory to run "node index.js"
