@@ -29,7 +29,7 @@ echo 'node "$PWD/namada-bot/index.js"' > "$PWD/namada-bot/run.sh"
 chmod +x "$PWD/namada-bot/run.sh"
 
 # Get input for telegramToken from the user
-read -p "Enter the telegramToken value: " telegramToken
+read -p "Enter the Telegram Bot Token value: " telegramToken
 
 # Create the config.json file with the provided telegramToken value
 cat <<EOF >config.json
