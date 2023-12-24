@@ -41,7 +41,7 @@ cat <<EOF | sudo tee /etc/systemd/system/namada-bot.service >/dev/null
 Description=Service to run Namada Bot
 
 [Service]
-ExecStart=/usr/bin/node $current_directory/index.js
+ExecStart=/usr/bin/node $current_directory/namada-bot/index.js
 Restart=always
 RestartSec=10
 User=$default_user
