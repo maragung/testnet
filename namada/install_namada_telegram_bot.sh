@@ -28,7 +28,7 @@ EOF
 npm install
 
 # Create the service file in the systemd directory to run "node index.js"
-cat <<EOFSERVICE | sudo tee /etc/systemd/system/namada-bot.service >/dev/null
+cat <<EOF | sudo tee /etc/systemd/system/namada-bot.service >/dev/null
 [Unit]
 Description=Service to run Namada Bot
 
@@ -44,7 +44,7 @@ Environment=NODE_ENV=production
 
 [Install]
 WantedBy=multi-user.target
-EOFSERVICE
+EOF
 
 # Start the service and enable it to run at boot
 sudo systemctl start namada-bot
