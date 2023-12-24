@@ -28,9 +28,7 @@ wait
 cd "$current_directory/namada-bot"
 
 
-echo 'node "$current_directory/namada-bot/index.js"' > "$current_directory/namada-bot/run.sh"
-wait
-# Add execute permission to the run.sh file
+echo 'node "$PWD/namada-bot/index.js"' > "$current_directory/namada-bot/run.sh"
 chmod +x "$current_directory/namada-bot/run.sh"
 
 
