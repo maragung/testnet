@@ -1,6 +1,6 @@
 #!/bin/bash
 
-read -p "Enter the address (ADDRESS): " user_address
+read -p "Enter the address (METAMASK ADDRESS): " user_address
 
 # Check if user_address is provided
 if [ -z "$user_address" ]; then
