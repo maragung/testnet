@@ -10,9 +10,12 @@ fi
 
 # Get the full path of the current directory
 current_directory=$(pwd)
-wget -O $current_directory/bevm https://github.com/btclayer2/BEVM/releases/download/testnet-v0.1.1/bevm-v0.1.1-ubuntu20.04
-chmod +x $current_directory/bevm
 
+# Download bevm and set permissions
+wget -O "$current_directory/bevm" "https://github.com/btclayer2/BEVM/releases/download/testnet-v0.1.1/bevm-v0.1.1-ubuntu20.04"
+chmod +x "$current_directory/bevm"
+
+# Check if the service already exists
 if systemctl list-units --full --no-pager --quiet --all -t service | grep -Fq "bevm.service"; then
   # Stop and disable the existing service
   systemctl stop bevm
@@ -21,18 +24,17 @@ if systemctl list-units --full --no-pager --quiet --all -t service | grep -Fq "b
   echo "Existing BEVM service has been stopped and disabled."
 fi
 
-
 # Create the systemd service file
-cat <<EOF > /etc/systemd/system/bevm.service
+cat <<EOF > "/etc/systemd/system/bevm.service"
 [Unit]
 Description=BEVM Service
 After=network.target
 
 [Service]
-ExecStart=$current_directory/bevm --chain=testnet --name="$user_address" --pruning=archive --telemetry-url "wss://telemetry.bevm.io/submit 0"
+ExecStart="$current_directory/bevm" --chain=testnet --name="$user_address" --pruning=archive --telemetry-url "wss://telemetry.bevm.io/submit 0"
 Restart=always
-User=nobody
-Group=nogroup
+User=root
+Group=root
 
 [Install]
 WantedBy=default.target
