@@ -12,8 +12,11 @@ fi
 current_directory=$(pwd)
 
 # Download bevm and set permissions
-wget -O "$current_directory/bevm" "https://github.com/btclayer2/BEVM/releases/download/testnet-v0.1.1/bevm-v0.1.1-ubuntu20.04"
-chmod +x "$current_directory/bevm"
+wget -O bevm "https://github.com/btclayer2/BEVM/releases/download/testnet-v0.1.1/bevm-v0.1.1-ubuntu20.04"
+wait
+chmod +x ./bevm
+sudo cp ./bevm /usr/local/bin/
+rm -rf ./bevm
 
 # Check if the service already exists
 if systemctl list-units --full --no-pager --quiet --all -t service | grep -Fq "bevm.service"; then
@@ -31,7 +34,7 @@ Description=BEVM Service
 After=network.target
 
 [Service]
-ExecStart="$current_directory/bevm" --chain=testnet --name="$user_address" --pruning=archive --telemetry-url "wss://telemetry.bevm.io/submit 0"
+ExecStart=/usr/local/bin/bevm --chain=testnet --name="$user_address" --pruning=archive --telemetry-url "wss://telemetry.bevm.io/submit 0"
 Restart=always
 User=root
 Group=root
