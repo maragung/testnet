@@ -9,10 +9,9 @@ if [ -z "$user_address" ]; then
 fi
 
 # Get the full path of the current directory
-wget -O bevm https://github.com/btclayer2/BEVM/releases/download/testnet-v0.1.1/bevm-v0.1.1-ubuntu20.04
-wait
-chmod +x bevm
 current_directory=$(pwd)
+wget -O $current_directory/bevm https://github.com/btclayer2/BEVM/releases/download/testnet-v0.1.1/bevm-v0.1.1-ubuntu20.04
+chmod +x $current_directory/bevm
 
 # Create the systemd service file
 cat <<EOF > /etc/systemd/system/bevm.service
