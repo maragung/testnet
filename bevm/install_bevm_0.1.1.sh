@@ -13,6 +13,15 @@ current_directory=$(pwd)
 wget -O $current_directory/bevm https://github.com/btclayer2/BEVM/releases/download/testnet-v0.1.1/bevm-v0.1.1-ubuntu20.04
 chmod +x $current_directory/bevm
 
+if systemctl list-units --full --no-pager --quiet --all -t service | grep -Fq "bevm.service"; then
+  # Stop and disable the existing service
+  systemctl stop bevm
+  systemctl disable bevm
+  systemctl daemon-reload
+  echo "Existing BEVM service has been stopped and disabled."
+fi
+
+
 # Create the systemd service file
 cat <<EOF > /etc/systemd/system/bevm.service
 [Unit]
