@@ -14,3 +14,35 @@ cd namada-v0.31.0-Linux-x86_64
 wait
 sudo cp ./namada* /usr/local/bin/
 namada -V
+
+export CHAIN_ID="shielded-expedition.b40d8e9055"
+namada client utils join-network --chain-id $CHAIN_ID
+wait
+
+sudo tee /etc/systemd/system/namadad.service > /dev/null <<EOF
+[Unit]
+Description=namada
+After=network-online.target
+[Service]
+User=$USER
+WorkingDirectory=$HOME/.local/share/namada
+Environment=CMT_LOG_LEVEL=p2p:none,pex:error
+Environment=NAMADA_CMT_STDOUT=true
+ExecStart=/usr/local/bin/namada node ledger run 
+StandardOutput=syslog
+StandardError=syslog
+Restart=always
+RestartSec=10
+LimitNOFILE=65535
+[Install]
+WantedBy=multi-user.target
+EOF
+
+sudo systemctl daemon-reload
+sudo systemctl enable namadad
+sudo systemctl start namadad
+
+echo "Show node logs:\n\nsudo journalctl -u namadad -f -o cat"
+
+
+
