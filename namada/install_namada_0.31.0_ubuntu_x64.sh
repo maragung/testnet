@@ -1,4 +1,10 @@
 #!/bin/bash
+echo "......................................."
+sudo systemctl stop namadad
+wait
+sudo systemctl disable namadad
+wait
+
 echo "Downloading files......"
 wget https://github.com/cometbft/cometbft/releases/download/v0.37.2/cometbft_0.37.2_linux_amd64.tar.gz
 tar xvzf cometbft_0.37.2_linux_amd64.tar.gz
