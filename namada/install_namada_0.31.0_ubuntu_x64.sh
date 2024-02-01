@@ -39,10 +39,13 @@ WantedBy=multi-user.target
 EOF
 
 sudo systemctl daemon-reload
+wait
 sudo systemctl enable namadad
+wait
 sudo systemctl start namadad
+wait
 
-echo "Show node logs:\n\nsudo journalctl -u namadad -f -o cat"
+echo "Show node logs: sudo journalctl -u namadad -f -o cat"
 
 
 
