@@ -8,25 +8,27 @@ install_all() {
 
 # Function to create and configure the service
 setup_service() {
-    # Create nubit-node folder in home directory
-    mkdir -p /home/$(whoami)/nubit-node
+    # Ensure the nubit-node folder exists and is accessible
+    NODE_DIR="/home/$(whoami)/nubit-node"
+    mkdir -p "$NODE_DIR"
 
     # Download start.sh to nubit-node folder
-    curl -o /home/$(whoami)/nubit-node/start.sh https://nubit.sh/start.sh
-    chmod +x /home/$(whoami)/nubit-node/start.sh
+    curl -o "$NODE_DIR/start.sh" https://nubit.sh/start.sh
+    chmod +x "$NODE_DIR/start.sh"
 
-    # Create service to run start.sh
-    cat <<EOL | sudo tee /etc/systemd/system/nubitd.service
+    # Create service file for systemd
+    SERVICE_FILE="/etc/systemd/system/nubitd.service"
+    sudo tee "$SERVICE_FILE" > /dev/null <<EOL
 [Unit]
 Description=Nubit Node Service
 After=network.target
 
 [Service]
-ExecStart=/bin/bash /home/$(whoami)/nubit-node/start.sh
+ExecStart=/bin/bash $NODE_DIR/start.sh
 Restart=always
 User=$(whoami)
 Environment=PATH=/usr/bin:/usr/local/bin
-WorkingDirectory=/home/$(whoami)/nubit-node
+WorkingDirectory=$NODE_DIR
 
 [Install]
 WantedBy=multi-user.target
@@ -41,7 +43,7 @@ EOL
 
     # Display the latest logs from the nubitd service
     echo "Displaying the latest logs from the nubitd service:"
-    journalctl -u nubitd -f
+    journalctl -u nubitd -n 10 --no-pager
 }
 
 # Display menu options
