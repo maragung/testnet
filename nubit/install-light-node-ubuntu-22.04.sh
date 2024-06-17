@@ -46,13 +46,20 @@ EOL
     journalctl -u nubitd -n 10 --no-pager
 }
 
+# Function to read logs interactively
+read_logs() {
+    echo "Reading logs interactively for nubitd service. Press Ctrl+C to exit."
+    sudo journalctl -u nubitd -f
+}
+
 # Display menu options
 echo "Select installation option:"
 echo "1) Full installation"
 echo "2) Install Service"
+echo "3) Read logs interactively"
 
 # Use read with -r -p options to ensure it reads correctly
-read -r -p "Enter your choice (1 or 2): " choice
+read -r -p "Enter your choice (1, 2, or 3): " choice
 
 case $choice in
     1)
@@ -64,10 +71,14 @@ case $choice in
         echo "Performing service install only..."
         setup_service
         ;;
+    3)
+        echo "Reading logs interactively..."
+        read_logs
+        ;;
     *)
         echo "Invalid choice. Exiting."
         exit 1
         ;;
 esac
 
-echo "Process complete. To read log type: journalctl -u nubitd -f"
+echo "Process complete. To read logs again, type: journalctl -u nubitd -f"
