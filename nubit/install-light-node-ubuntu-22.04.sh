@@ -70,4 +70,4 @@ case $choice in
         ;;
 esac
 
-echo "Process complete."
+echo "Process complete. To read log type: journalctl -u nubitd -f"
