@@ -41,14 +41,16 @@ EOL
 
     # Display the latest logs from the nubitd service
     echo "Displaying the latest logs from the nubitd service:"
-    journalctl -u nubitd.service -n 10
+    journalctl -u nubitd -f
 }
 
 # Display menu options
 echo "Select installation option:"
 echo "1) Full installation"
 echo "2) Install Service"
-read -p "Enter your choice (1 or 2): " choice
+
+# Use read with -r -p options to ensure it reads correctly
+read -r -p "Enter your choice (1 or 2): " choice
 
 case $choice in
     1)
@@ -57,7 +59,7 @@ case $choice in
         setup_service
         ;;
     2)
-        echo "Performing service reinstall/refresh only..."
+        echo "Performing service install only..."
         setup_service
         ;;
     *)
