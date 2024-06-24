@@ -54,7 +54,7 @@ read_logs() {
 
 # Display menu options
 echo "Select installation option:"
-echo "1) Full installation"
+echo "1) Install Node"
 echo "2) Install Service"
 echo "3) Read logs interactively"
 
