@@ -63,7 +63,7 @@ read -r -p "Enter your choice (1, 2, or 3): " choice
 
 case $choice in
     1)
-        echo "Performing full installation..."
+        echo "Performing node installation..."
         install_all
         setup_service
         ;;
