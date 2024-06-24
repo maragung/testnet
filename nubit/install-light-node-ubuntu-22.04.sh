@@ -66,14 +66,52 @@ read_logs() {
     sudo journalctl -u nubitd -f
 }
 
+# Function to uninstall the service and remove nubit-node
+uninstall_service() {
+    # Confirm before uninstalling
+    read -r -p "Are you sure you want to uninstall the node? Have you backed up your data? (yes/no): " confirm
+    if [[ "$confirm" != "yes" ]]; then
+        echo "Uninstallation aborted."
+        exit 1
+    fi
+
+    # Stop and disable the service if it exists
+    SERVICE_FILE="/etc/systemd/system/nubitd.service"
+    if [ -f "$SERVICE_FILE" ]; then
+        echo "Stopping and disabling nubitd service..."
+        sudo systemctl stop nubitd
+        sudo systemctl disable nubitd
+        sudo rm "$SERVICE_FILE"
+        sudo systemctl daemon-reload
+    fi
+
+    # Remove the nubit-node directory
+    NODE_DIR="/home/$(whoami)/nubit-node"
+    if [ -d "$NODE_DIR" ]; then
+        echo "Removing nubit-node directory..."
+        rm -rf "$NODE_DIR"
+    fi
+
+    # Rename the .nubit-light-nubit-alphatestnet-1 directory
+    DATA_DIR="/home/$(whoami)/.nubit-light-nubit-alphatestnet-1"
+    BACKUP_DIR="/home/$(whoami)/.backup_nubit-light-nubit-alphatestnet-1"
+    if [ -d "$DATA_DIR" ]; then
+        echo "Renaming data directory to backup..."
+        mv "$DATA_DIR" "$BACKUP_DIR"
+    fi
+
+    echo "Uninstallation complete."
+}
+
 # Display menu options
 echo "Select installation option:"
 echo "1) Install Node"
 echo "2) Install Service"
 echo "3) Read logs interactively"
+echo "4) Uninstall Service"
 
 # Use read with -r -p options to ensure it reads correctly
-read -r -p "Enter your choice (1, 2, or 3): " choice
+read -r -p "Enter your choice (1, 2, 3, or 4): " choice
 
 case $choice in
     1)
@@ -90,6 +128,11 @@ case $choice in
     3)
         echo "Reading logs interactively..."
         read_logs
+        ;;
+    4)
+        echo "Uninstalling node..."
+        check_and_stop_service
+        uninstall_service
         ;;
     *)
         echo "Invalid choice. Exiting."
