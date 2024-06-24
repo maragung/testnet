@@ -66,7 +66,6 @@ read_logs() {
     sudo journalctl -u nubitd -f
 }
 
-
 # Function to uninstall the service and remove nubit-node
 uninstall_service() {
     # Confirm before uninstalling
@@ -86,11 +85,18 @@ uninstall_service() {
         sudo systemctl daemon-reload
     fi
 
-    # Remove the nubit-node directory
-    NODE_DIR="/home/$(whoami)/nubit-node"
-    if [ -d "$NODE_DIR" ]; then
-        echo "Removing nubit-node directory..."
-        rm -rf "$NODE_DIR"
+    # Remove the nubit-node directory in home
+    NODE_DIR_HOME="/home/$(whoami)/nubit-node"
+    if [ -d "$NODE_DIR_HOME" ]; then
+        echo "Removing nubit-node directory in home..."
+        rm -rf "$NODE_DIR_HOME"
+    fi
+
+    # Remove the nubit-node directory in root
+    NODE_DIR_ROOT="/root/nubit-node"
+    if [ -d "$NODE_DIR_ROOT" ]; then
+        echo "Removing nubit-node directory in root..."
+        sudo rm -rf "$NODE_DIR_ROOT"
     fi
 
     # Rename the .nubit-light-nubit-alphatestnet-1 directory in /root
@@ -111,7 +117,6 @@ uninstall_service() {
 
     echo "Uninstallation complete."
 }
-
 
 # Display menu options
 echo "Select installation option:"
@@ -149,7 +154,6 @@ case $choice in
         exit 1
         ;;
 esac
-
 
 echo "Process complete. To start the service: sudo systemctl start nubitd"
 echo "To restart the service: sudo systemctl restart nubitd"
