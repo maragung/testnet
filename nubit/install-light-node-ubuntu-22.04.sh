@@ -66,6 +66,7 @@ read_logs() {
     sudo journalctl -u nubitd -f
 }
 
+
 # Function to uninstall the service and remove nubit-node
 uninstall_service() {
     # Confirm before uninstalling
@@ -92,16 +93,25 @@ uninstall_service() {
         rm -rf "$NODE_DIR"
     fi
 
-    # Rename the .nubit-light-nubit-alphatestnet-1 directory
-    DATA_DIR="/root/.nubit-light-nubit-alphatestnet-1"
-    BACKUP_DIR="/root/.backup_nubit-light-nubit-alphatestnet-1"
-    if [ -d "$DATA_DIR" ]; then
-        echo "Renaming data directory to backup..."
-        mv "$DATA_DIR" "$BACKUP_DIR"
+    # Rename the .nubit-light-nubit-alphatestnet-1 directory in /root
+    DATA_DIR_ROOT="/root/.nubit-light-nubit-alphatestnet-1"
+    BACKUP_DIR_ROOT="/root/.backup_nubit-light-nubit-alphatestnet-1"
+    if [ -d "$DATA_DIR_ROOT" ]; then
+        echo "Renaming data directory in /root to backup..."
+        sudo mv "$DATA_DIR_ROOT" "$BACKUP_DIR_ROOT"
+    fi
+
+    # Rename the .nubit-light-nubit-alphatestnet-1 directory in /home/username
+    DATA_DIR_HOME="/home/$(whoami)/.nubit-light-nubit-alphatestnet-1"
+    BACKUP_DIR_HOME="/home/$(whoami)/.backup_nubit-light-nubit-alphatestnet-1"
+    if [ -d "$DATA_DIR_HOME" ]; then
+        echo "Renaming data directory in home to backup..."
+        mv "$DATA_DIR_HOME" "$BACKUP_DIR_HOME"
     fi
 
     echo "Uninstallation complete."
 }
+
 
 # Display menu options
 echo "Select installation option:"
