@@ -150,6 +150,7 @@ case $choice in
         ;;
 esac
 
+
 echo "Process complete. To start the service: sudo systemctl start nubitd"
 echo "To restart the service: sudo systemctl restart nubitd"
 echo "To stop the service: sudo systemctl stop nubitd"
