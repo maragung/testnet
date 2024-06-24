@@ -92,13 +92,15 @@ uninstall_service() {
         rm -rf "$NODE_DIR"
     fi
 
-    # Rename the .nubit-light-nubit-alphatestnet-1 directory
-    DATA_DIR="/home/$(whoami)/.nubit-light-nubit-alphatestnet-1"
-    BACKUP_DIR="/home/$(whoami)/.backup_nubit-light-nubit-alphatestnet-1"
-    if [ -d "$DATA_DIR" ]; then
-        echo "Renaming data directory to backup..."
-        mv "$DATA_DIR" "$BACKUP_DIR"
-    fi
+    # Rename the .nubit-light-nubit-alphatestnet-1 directories
+    DATA_DIRS=("/home/$(whoami)/.nubit-light-nubit-alphatestnet-1" "/root/.nubit-light-nubit-alphatestnet-1")
+    for DATA_DIR in "${DATA_DIRS[@]}"; then
+        if [ -d "$DATA_DIR" ]; then
+            BACKUP_DIR="${DATA_DIR/.nubit-light-nubit-alphatestnet-1/.backup_nubit-light-nubit-alphatestnet-1}"
+            echo "Renaming $DATA_DIR to $BACKUP_DIR..."
+            sudo mv "$DATA_DIR" "$BACKUP_DIR"
+        fi
+    done
 
     echo "Uninstallation complete."
 }
