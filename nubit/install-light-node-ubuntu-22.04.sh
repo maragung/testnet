@@ -70,7 +70,7 @@ read_logs() {
 # Function to uninstall the service and remove nubit-node
 uninstall_service() {
     # Confirm before uninstalling
-    read -r -p "Are you sure you want to uninstall the service? Have you backed up your data? (yes/no): " confirm
+    read -r -p "Are you sure you want to uninstall the node service? Have you backed up your data? (yes/no): " confirm
     if [[ "$confirm" != "yes" ]]; then
         echo "Uninstallation aborted."
         exit 1
@@ -118,7 +118,7 @@ echo "Select installation option:"
 echo "1) Install Node"
 echo "2) Install Service"
 echo "3) Read logs interactively"
-echo "4) Uninstall Service"
+echo "4) Uninstall node"
 
 # Use read with -r -p options to ensure it reads correctly
 read -r -p "Enter your choice (1, 2, 3, or 4): " choice
