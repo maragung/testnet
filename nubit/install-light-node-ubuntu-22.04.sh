@@ -69,7 +69,7 @@ read_logs() {
 # Function to uninstall the service and remove nubit-node
 uninstall_service() {
     # Confirm before uninstalling
-    read -r -p "Are you sure you want to uninstall the node? Have you backed up your data? (yes/no): " confirm
+    read -r -p "Are you sure you want to uninstall the service? Have you backed up your data? (yes/no): " confirm
     if [[ "$confirm" != "yes" ]]; then
         echo "Uninstallation aborted."
         exit 1
@@ -92,15 +92,13 @@ uninstall_service() {
         rm -rf "$NODE_DIR"
     fi
 
-    # Rename the .nubit-light-nubit-alphatestnet-1 directories
-    DATA_DIRS=("/home/$(whoami)/.nubit-light-nubit-alphatestnet-1" "/root/.nubit-light-nubit-alphatestnet-1")
-    for DATA_DIR in "${DATA_DIRS[@]}"; then
-        if [ -d "$DATA_DIR" ]; then
-            BACKUP_DIR="${DATA_DIR/.nubit-light-nubit-alphatestnet-1/.backup_nubit-light-nubit-alphatestnet-1}"
-            echo "Renaming $DATA_DIR to $BACKUP_DIR..."
-            sudo mv "$DATA_DIR" "$BACKUP_DIR"
-        fi
-    done
+    # Rename the .nubit-light-nubit-alphatestnet-1 directory
+    DATA_DIR="/root/.nubit-light-nubit-alphatestnet-1"
+    BACKUP_DIR="/root/.backup_nubit-light-nubit-alphatestnet-1"
+    if [ -d "$DATA_DIR" ]; then
+        echo "Renaming data directory to backup..."
+        mv "$DATA_DIR" "$BACKUP_DIR"
+    fi
 
     echo "Uninstallation complete."
 }
@@ -132,7 +130,7 @@ case $choice in
         read_logs
         ;;
     4)
-        echo "Uninstalling node..."
+        echo "Uninstalling service..."
         check_and_stop_service
         uninstall_service
         ;;
