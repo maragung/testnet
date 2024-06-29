@@ -2,6 +2,7 @@
 
 # Define variables
 CHAIN_ID="luminara-position.5eef10f5ab83"
+NAMADA_VERSION="v0.39.0"
 NAMADA_DIR="${HOME}/.local/share/namada"
 TEMP_DIR="${HOME}/tmp"
 SNAPSHOT_URL="https://testnet.luminara.icu/luminara-position.5eef10f5ab83_2024-06-24T13.08.tar.lz4"
@@ -16,7 +17,7 @@ command_exists() {
 # Function to initialize environment variables
 initialize_env_vars() {
     echo "Please enter the following information or press enter to accept the default values:"
-    read -p "Namada Version: " NAMADA_VERSION
+    read -p "Namada Version [${NAMADA_VERSION}]: " NAMADA_VERSION
     NAMADA_VERSION=${NAMADA_VERSION:-v0.39.0}
     read -p "Namada Port [26]: " NAMADA_PORT
     NAMADA_PORT=${NAMADA_PORT:-26}
