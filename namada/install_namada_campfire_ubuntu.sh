@@ -15,42 +15,35 @@ command_exists() {
 
 # Function to initialize environment variables
 initialize_env_vars() {
-    echo "Please enter the following information or press enter to accept the default values:"
-    read -p "Namada Port [26]: " NAMADA_PORT
-    NAMADA_PORT=${NAMADA_PORT:-26}
-    read -p "Validator Alias [CHOOSE_A_NAME_FOR_YOUR_VALIDATOR]: " NAMADA_ALIAS
-    NAMADA_ALIAS=${NAMADA_ALIAS:-CHOOSE_A_NAME_FOR_YOUR_VALIDATOR}
-    read -p "Memo [CHOOSE_YOUR_tpknam_ADDRESS]: " NAMADA_MEMO
-    NAMADA_MEMO=${NAMADA_MEMO:-CHOOSE_YOUR_tpknam_ADDRESS}
-    read -p "Wallet [wallet]: " NAMADA_WALLET
-    NAMADA_WALLET=${NAMADA_WALLET:-wallet}
-    read -p "Chain ID [${CHAIN_ID}]: " NAMADA_CHAIN_ID
-    NAMADA_CHAIN_ID=${NAMADA_CHAIN_ID:-${CHAIN_ID}}
-    NAMADA_PUBLIC_IP=$(wget -qO- eth0.me)
-    NAMADA_TM_HASH="v0.1.4-abciplus"
-    NAMADA_BASE_DIR="$HOME/.local/share/namada"
-
-    # Export environment variables
-    echo "export NAMADA_PORT=${NAMADA_PORT}" >> $HOME/.bash_profile
-    echo "export NAMADA_ALIAS=${NAMADA_ALIAS}" >> $HOME/.bash_profile
-    echo "export NAMADA_MEMO=${NAMADA_MEMO}" >> $HOME/.bash_profile
-    echo "export NAMADA_WALLET=${NAMADA_WALLET}" >> $HOME/.bash_profile
-    echo "export NAMADA_PUBLIC_IP=${NAMADA_PUBLIC_IP}" >> $HOME/.bash_profile
-    echo "export NAMADA_TM_HASH=${NAMADA_TM_HASH}" >> $HOME/.bash_profile
-    echo "export NAMADA_CHAIN_ID=${NAMADA_CHAIN_ID}" >> $HOME/.bash_profile
-    echo "export NAMADA_BASE_DIR=${NAMADA_BASE_DIR}" >> $HOME/.bash_profile
-    source $HOME/.bash_profile
-
-    # Print details
+    echo "Initializing environment variables..."
+    echo -e "\e[1;97mNAMADA_PORT\e[0m=${NAMADA_PORT}"
+    echo -e "\e[1;97mNAMADA_ALIAS\e[0m=${NAMADA_ALIAS}"
+    echo -e "\e[1;97mNAMADA_MEMO\e[0m=${NAMADA_MEMO}"
+    echo -e "\e[1;97mNAMADA_WALLET\e[0m=${NAMADA_WALLET}"
+    echo -e "\e[1;97mNAMADA_PUBLIC_IP\e[0m=${NAMADA_PUBLIC_IP}"
+    echo -e "\e[1;97mNAMADA_TM_HASH\e[0m=${NAMADA_TM_HASH}"
+    echo -e "\e[1;97mNAMADA_CHAIN_ID\e[0m=${NAMADA_CHAIN_ID}"
+    echo -e "\e[1;97mNAMADA_BASE_DIR\e[0m=${NAMADA_BASE_DIR}"
     echo "Namada Version: ${NAMADA_VERSION}"
     echo "Chain ID: ${CHAIN_ID}"
     echo "Namada Directory: ${NAMADA_DIR}"
     echo "Temporary Directory: ${TEMP_DIR}"
     echo "Public IP: ${NAMADA_PUBLIC_IP}"
+
+    read -p "Are these values correct? Proceed with installation? (Y/n): " confirm
+    confirm=${confirm:-Y}  # Default value is Y if user presses enter without input
+
+    if [[ $confirm =~ ^[Yy]$ ]]; then
+        install_dependencies
+    else
+        echo "Installation aborted."
+        exit 1
+    fi
 }
 
 # Install dependencies
 install_dependencies() {
+    echo "Installing dependencies..."
     sudo apt update
     sudo apt-get install -y make git-core libssl-dev pkg-config libclang-12-dev build-essential protobuf-compiler
 }
