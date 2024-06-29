@@ -15,27 +15,54 @@ command_exists() {
 
 # Function to initialize environment variables
 initialize_env_vars() {
-    echo "Initializing environment variables..."
-    echo -e "\e[1;97mNAMADA_PORT\e[0m=${NAMADA_PORT}"
-    echo -e "\e[1;97mNAMADA_ALIAS\e[0m=${NAMADA_ALIAS}"
-    echo -e "\e[1;97mNAMADA_MEMO\e[0m=${NAMADA_MEMO}"
-    echo -e "\e[1;97mNAMADA_WALLET\e[0m=${NAMADA_WALLET}"
-    echo -e "\e[1;97mNAMADA_PUBLIC_IP\e[0m=${NAMADA_PUBLIC_IP}"
-    echo -e "\e[1;97mNAMADA_TM_HASH\e[0m=${NAMADA_TM_HASH}"
-    echo -e "\e[1;97mNAMADA_CHAIN_ID\e[0m=${NAMADA_CHAIN_ID}"
-    echo -e "\e[1;97mNAMADA_BASE_DIR\e[0m=${NAMADA_BASE_DIR}"
-    echo "Namada Version: ${NAMADA_VERSION}"
-    echo "Chain ID: ${CHAIN_ID}"
-    echo "Namada Directory: ${NAMADA_DIR}"
-    echo "Temporary Directory: ${TEMP_DIR}"
-    echo "Public IP: ${NAMADA_PUBLIC_IP}"
+    echo "Please enter the following information or press enter to accept the default values:"
+    read -p "Namada Version: " NAMADA_VERSION
+    NAMADA_VERSION=${NAMADA_VERSION:-v0.39.0}
+    read -p "Namada Port [26]: " NAMADA_PORT
+    NAMADA_PORT=${NAMADA_PORT:-26}
+    read -p "Validator Alias [CHOOSE_A_NAME_FOR_YOUR_VALIDATOR]: " NAMADA_ALIAS
+    NAMADA_ALIAS=${NAMADA_ALIAS:-CHOOSE_A_NAME_FOR_YOUR_VALIDATOR}
+    read -p "Memo [CHOOSE_YOUR_tpknam_ADDRESS]: " NAMADA_MEMO
+    NAMADA_MEMO=${NAMADA_MEMO:-CHOOSE_YOUR_tpknam_ADDRESS}
+    read -p "Wallet [wallet]: " NAMADA_WALLET
+    NAMADA_WALLET=${NAMADA_WALLET:-wallet}
+    read -p "Chain ID [${CHAIN_ID}]: " NAMADA_CHAIN_ID
+    NAMADA_CHAIN_ID=${NAMADA_CHAIN_ID:-${CHAIN_ID}}
+    NAMADA_PUBLIC_IP=$(wget -qO- eth0.me)
+    NAMADA_TM_HASH="v0.1.4-abciplus"
+    NAMADA_BASE_DIR="$HOME/.local/share/namada"
 
-    read -p "Are these values correct? Proceed with installation? (Y/n): " confirm
-    confirm=${confirm:-Y}  # Default value is Y if user presses enter without input
+    # Export environment variables
+    echo "export NAMADA_VERSION=${NAMADA_VERSION}" >> $HOME/.bash_profile
+    echo "export NAMADA_PORT=${NAMADA_PORT}" >> $HOME/.bash_profile
+    echo "export NAMADA_ALIAS=${NAMADA_ALIAS}" >> $HOME/.bash_profile
+    echo "export NAMADA_MEMO=${NAMADA_MEMO}" >> $HOME/.bash_profile
+    echo "export NAMADA_WALLET=${NAMADA_WALLET}" >> $HOME/.bash_profile
+    echo "export NAMADA_PUBLIC_IP=${NAMADA_PUBLIC_IP}" >> $HOME/.bash_profile
+    echo "export NAMADA_TM_HASH=${NAMADA_TM_HASH}" >> $HOME/.bash_profile
+    echo "export NAMADA_CHAIN_ID=${NAMADA_CHAIN_ID}" >> $HOME/.bash_profile
+    echo "export NAMADA_BASE_DIR=${NAMADA_BASE_DIR}" >> $HOME/.bash_profile
+    source $HOME/.bash_profile
 
-    if [[ $confirm =~ ^[Yy]$ ]]; then
-        install_dependencies
-    else
+}
+
+display_variables() {
+    echo "Please review the following variables:"
+    echo -e "\e[1;37mNAMADA_PORT\e[0m: ${NAMADA_PORT:-\e[1;31mnot set\e[0m}"
+    echo -e "\e[1;37mNAMADA_ALIAS\e[0m: ${NAMADA_ALIAS:-\e[1;31mnot set\e[0m}"
+    echo -e "\e[1;37mNAMADA_MEMO\e[0m: ${NAMADA_MEMO:-\e[1;31mnot set\e[0m}"
+    echo -e "\e[1;37mNAMADA_WALLET\e[0m: ${NAMADA_WALLET:-\e[1;31mnot set\e[0m}"
+    echo -e "\e[1;37mNAMADA_PUBLIC_IP\e[0m: ${NAMADA_PUBLIC_IP:-\e[1;31mnot set\e[0m}"
+    echo -e "\e[1;37mNAMADA_TM_HASH\e[0m: ${NAMADA_TM_HASH:-\e[1;31mnot set\e[0m}"
+    echo -e "\e[1;37mNAMADA_CHAIN_ID\e[0m: ${NAMADA_CHAIN_ID:-\e[1;31mnot set\e[0m}"
+    echo -e "\e[1;37mNAMADA_BASE_DIR\e[0m: ${NAMADA_BASE_DIR:-\e[1;31mnot set\e[0m}"
+    echo -e "\e[1;37mNAMADA_VERSION\e[0m: ${NAMADA_VERSION:-\e[1;31mnot set\e[0m}"
+    echo -e "\e[1;37mCHAIN_ID\e[0m: ${CHAIN_ID:-\e[1;31mnot set\e[0m}"
+    echo -e "\e[1;37mNAMADA_DIR\e[0m: ${NAMADA_DIR:-\e[1;31mnot set\e[0m}"
+
+    read -p "Are these values correct? Proceed with installation? (Y/n): " choice
+    choice=${choice:-Y}
+    if [ "$choice" != "Y" ] && [ "$choice" != "y" ]; then
         echo "Installation aborted."
         exit 1
     fi
@@ -43,7 +70,6 @@ initialize_env_vars() {
 
 # Install dependencies
 install_dependencies() {
-    echo "Installing dependencies..."
     sudo apt update
     sudo apt-get install -y make git-core libssl-dev pkg-config libclang-12-dev build-essential protobuf-compiler
 }
@@ -242,6 +268,7 @@ read -p "Enter your choice [1-6]: " choice
 case $choice in
     1)
         initialize_env_vars
+        display_variables
         install_dependencies
         install_go
         install_rust
