@@ -103,12 +103,24 @@ case $choice in
         install_docker
         ;;
     2)
+        if ! command -v docker-compose &> /dev/null; then
+            echo "Docker Compose not found. Please install Docker Compose first."
+            exit 1
+        fi
         setup_docker_compose
         ;;
     3)
+        if ! command -v docker-compose &> /dev/null; then
+            echo "Docker Compose not found. Please install Docker Compose first."
+            exit 1
+        fi
         restart_docker_compose
         ;;
     4)
+        if ! command -v docker-compose &> /dev/null; then
+            echo "Docker Compose not found. Please install Docker Compose first."
+            exit 1
+        fi
         read_docker_logs
         ;;
     5)
