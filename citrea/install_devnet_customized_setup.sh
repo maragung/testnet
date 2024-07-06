@@ -46,7 +46,8 @@ setup_citrea_devnet() {
     curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 
     # Step 2.2: Clone Citrea repository
-    git clone https://github.com/chainwayxyz/citrea --branch=v0.4.5 && cd citrea
+    git clone https://github.com/chainwayxyz/citrea --branch=v0.4.5
+    cd citrea
 
     # Step 2.3: Edit rollup config file
     cat <<EOF > configs/devnet/rollup_config.toml
