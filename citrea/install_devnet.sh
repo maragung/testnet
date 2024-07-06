@@ -85,6 +85,36 @@ uninstall_docker() {
     echo "Docker and Docker Compose have been uninstalled."
 }
 
+# Function to handle container conflicts
+handle_container_conflict() {
+    CONTAINER_NAME=$1
+    echo "Container with name '$CONTAINER_NAME' already exists."
+    echo "Select an option:"
+    echo "1. Remove the existing container"
+    echo "2. Skip and proceed without starting the new container"
+    echo "3. Read Docker Compose logs"
+    read -p "Enter your choice [1-3]: " conflict_choice
+
+    case $conflict_choice in
+        1)
+            echo "Removing the existing container..."
+            docker rm -f $CONTAINER_NAME
+            echo "Restarting Docker Compose..."
+            docker-compose up -d
+            ;;
+        2)
+            echo "Skipping the conflict resolution."
+            ;;
+        3)
+            read_docker_logs
+            ;;
+        *)
+            echo "Invalid option. Exiting."
+            exit 1
+            ;;
+    esac
+}
+
 # Main menu
 echo "Select an option:"
 echo "1. Install using Docker"
@@ -111,3 +141,11 @@ case $choice in
         exit 1
         ;;
 esac
+
+# Check for container conflicts after starting Docker Compose
+if [[ $choice -eq 1 || $choice -eq 2 ]]; then
+    CONTAINER_NAME="bitcoin-signet"
+    if [ "$(docker ps -aq -f name=$CONTAINER_NAME)" ]; then
+        handle_container_conflict $CONTAINER_NAME
+    fi
+fi
