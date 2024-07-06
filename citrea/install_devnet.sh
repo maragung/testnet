@@ -33,6 +33,15 @@ install_docker_compose() {
 
     sed -i 's/ROLLUP__RUNNER__INCLUDE_TX_BODY=true/ROLLUP__RUNNER__INCLUDE_TX_BODY=false/' $DOCKER_COMPOSE_FILE
 
+    echo "Starting Docker service..."
+    sudo systemctl enable docker
+    sudo systemctl start docker
+
+    # Adding user to Docker group
+    echo "Adding user to Docker group..."
+    sudo usermod -aG docker $USER
+    newgrp docker
+
     echo "Running Docker Compose..."
     docker-compose up -d
 
@@ -42,6 +51,7 @@ install_docker_compose() {
     fi
 
     echo "Docker Compose setup complete. The node is syncing with the network."
+    echo "Please log out and log back in for the group changes to take effect."
 }
 
 # Function to restart Docker Compose
@@ -101,4 +111,3 @@ case $choice in
         exit 1
         ;;
 esac
-
