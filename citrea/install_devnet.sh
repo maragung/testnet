@@ -77,10 +77,10 @@ uninstall_docker() {
 
 # Main menu
 echo "Select an option:"
-echo "1. Install Docker and set up Docker Compose"
-echo "2. Restart Docker Compose"
-echo "3. Read Docker Compose logs"
-echo "4. Uninstall Docker and Docker Compose"
+echo "1. Install using Docker"
+echo "2. Restart Docker"
+echo "3. Read logs"
+echo "4. Uninstall"
 read -p "Enter your choice [1-4]: " choice
 
 case $choice in
