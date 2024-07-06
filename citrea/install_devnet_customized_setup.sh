@@ -95,13 +95,20 @@ uninstall_docker() {
     echo "Docker and its dependencies have been uninstalled."
 }
 
+# Function to run Citrea after setup
+run_citrea() {
+    echo "Running Citrea..."
+    ./target/release/citrea --da-layer bitcoin --rollup-config-path configs/devnet/rollup_config.toml --genesis-paths configs/devnet/genesis-files
+}
+
 # Main menu
 echo "Select an option:"
 echo "1. Install Docker and setup Bitcoin Signet & Citrea Devnet"
 echo "2. Read Docker logs"
 echo "3. Uninstall Docker"
-echo "4. Exit"
-read -p "Enter your choice [1-4]: " choice
+echo "4. Run Citrea"
+echo "5. Exit"
+read -p "Enter your choice [1-5]: " choice
 
 case $choice in
     1)
@@ -116,6 +123,9 @@ case $choice in
         uninstall_docker
         ;;
     4)
+        run_citrea
+        ;;
+    5)
         echo "Exiting..."
         exit 0
         ;;
@@ -126,3 +136,4 @@ case $choice in
 esac
 
 exit 0
+
