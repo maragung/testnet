@@ -1,7 +1,7 @@
 #!/bin/bash
 
-# Function to install Docker and set up Docker Compose
-install_docker_compose() {
+# Function to install Docker
+install_docker() {
     echo "Installing Docker..."
     sudo apt-get update
     sudo apt-get install -y \
@@ -20,6 +20,20 @@ install_docker_compose() {
     sudo apt-get update
     sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-compose-plugin
 
+    echo "Starting Docker service..."
+    sudo systemctl enable docker
+    sudo systemctl start docker
+
+    # Adding user to Docker group
+    echo "Adding user to Docker group..."
+    sudo usermod -aG docker $USER
+    newgrp docker
+
+    echo "Docker installation complete. Please log out and log back in for the group changes to take effect."
+}
+
+# Function to set up Docker Compose
+setup_docker_compose() {
     echo "Setting up Docker Compose..."
     DOCKER_COMPOSE_FILE_URL="https://raw.githubusercontent.com/chainwayxyz/citrea/v0.4.0/docker-compose.yml"
     DOCKER_COMPOSE_FILE="docker-compose.yml"
@@ -33,15 +47,6 @@ install_docker_compose() {
 
     sed -i 's/ROLLUP__RUNNER__INCLUDE_TX_BODY=true/ROLLUP__RUNNER__INCLUDE_TX_BODY=false/' $DOCKER_COMPOSE_FILE
 
-    echo "Starting Docker service..."
-    sudo systemctl enable docker
-    sudo systemctl start docker
-
-    # Adding user to Docker group
-    echo "Adding user to Docker group..."
-    sudo usermod -aG docker $USER
-    newgrp docker
-
     echo "Running Docker Compose..."
     docker-compose up -d
 
@@ -51,7 +56,6 @@ install_docker_compose() {
     fi
 
     echo "Docker Compose setup complete. The node is syncing with the network."
-    echo "Please log out and log back in for the group changes to take effect."
 }
 
 # Function to restart Docker Compose
@@ -85,55 +89,29 @@ uninstall_docker() {
     echo "Docker and Docker Compose have been uninstalled."
 }
 
-# Function to handle container conflicts
-handle_container_conflict() {
-    CONTAINER_NAME=$1
-    echo "Container with name '$CONTAINER_NAME' already exists."
-    echo "Select an option:"
-    echo "1. Remove the existing container"
-    echo "2. Skip and proceed without starting the new container"
-    echo "3. Read Docker Compose logs"
-    read -p "Enter your choice [1-3]: " conflict_choice
-
-    case $conflict_choice in
-        1)
-            echo "Removing the existing container..."
-            docker rm -f $CONTAINER_NAME
-            echo "Restarting Docker Compose..."
-            docker-compose up -d
-            ;;
-        2)
-            echo "Skipping the conflict resolution."
-            ;;
-        3)
-            read_docker_logs
-            ;;
-        *)
-            echo "Invalid option. Exiting."
-            exit 1
-            ;;
-    esac
-}
-
 # Main menu
 echo "Select an option:"
-echo "1. Install using Docker"
-echo "2. Restart Docker"
-echo "3. Read logs"
-echo "4. Uninstall"
-read -p "Enter your choice [1-4]: " choice
+echo "1. Install Docker"
+echo "2. Set up Docker Compose"
+echo "3. Restart Docker"
+echo "4. Read logs"
+echo "5. Uninstall"
+read -p "Enter your choice [1-5]: " choice
 
 case $choice in
     1)
-        install_docker_compose
+        install_docker
         ;;
     2)
-        restart_docker_compose
+        setup_docker_compose
         ;;
     3)
-        read_docker_logs
+        restart_docker_compose
         ;;
     4)
+        read_docker_logs
+        ;;
+    5)
         uninstall_docker
         ;;
     *)
@@ -141,11 +119,3 @@ case $choice in
         exit 1
         ;;
 esac
-
-# Check for container conflicts after starting Docker Compose
-if [[ $choice -eq 1 || $choice -eq 2 ]]; then
-    CONTAINER_NAME="bitcoin-signet"
-    if [ "$(docker ps -aq -f name=$CONTAINER_NAME)" ]; then
-        handle_container_conflict $CONTAINER_NAME
-    fi
-fi
