@@ -21,7 +21,7 @@ install_docker_compose() {
     sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-compose-plugin
 
     echo "Setting up Docker Compose..."
-    DOCKER_COMPOSE_FILE_URL="https://github.com/chainwayxyz/citrea/blob/v0.4.0/docker-compose.yml"
+    DOCKER_COMPOSE_FILE_URL="https://raw.githubusercontent.com/chainwayxyz/citrea/v0.4.0/docker-compose.yml"
     DOCKER_COMPOSE_FILE="docker-compose.yml"
 
     curl -L $DOCKER_COMPOSE_FILE_URL -o $DOCKER_COMPOSE_FILE
