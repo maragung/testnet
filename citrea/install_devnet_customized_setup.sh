@@ -42,9 +42,6 @@ setup_bitcoin_signet() {
 # Function to setup Citrea Devnet Client
 setup_citrea_devnet() {
     echo "Setting up Citrea Devnet Client..."
-    # Step 2.1: Install Rust
-    curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
-
     # Step 2.2: Clone Citrea repository
     git clone https://github.com/chainwayxyz/citrea --branch=v0.4.5
     cd citrea
@@ -68,6 +65,9 @@ sequencer_client_url = "https://rpc.devnet.citrea.xyz"
 include_tx_body = false
 EOF
 
+    # Step 2.1: Install Rust
+    curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+    
     # Step 2.4: Build the project
     SKIP_GUEST_BUILD=1 make build-release
 
