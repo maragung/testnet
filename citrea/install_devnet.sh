@@ -1,7 +1,7 @@
 #!/bin/bash
 
-# Function to install Docker
-install_docker() {
+# Function to install Docker and Docker Compose
+install_docker_and_docker_compose() {
     echo "Installing Docker..."
     sudo apt-get update
     sudo apt-get install -y \
@@ -18,18 +18,18 @@ install_docker() {
       $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
 
     sudo apt-get update
-    sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-compose-plugin
+    sudo apt-get install -y docker-ce docker-ce-cli containerd.io
 
-    echo "Starting Docker service..."
-    sudo systemctl enable docker
-    sudo systemctl start docker
+    echo "Installing Docker Compose..."
+    sudo curl -L "https://github.com/docker/compose/releases/download/v2.6.0/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+    sudo chmod +x /usr/local/bin/docker-compose
 
-    # Adding user to Docker group
-    echo "Adding user to Docker group..."
-    sudo usermod -aG docker $USER
-    newgrp docker
+    if ! command -v docker-compose &> /dev/null; then
+        echo "Docker Compose installation failed. Exiting."
+        exit 1
+    fi
 
-    echo "Docker installation complete. Please log out and log back in for the group changes to take effect."
+    echo "Docker and Docker Compose installation complete."
 }
 
 # Function to set up Docker Compose
@@ -45,7 +45,11 @@ setup_docker_compose() {
         exit 1
     fi
 
-    sed -i 's/ROLLUP__RUNNER__INCLUDE_TX_BODY=true/ROLLUP__RUNNER__INCLUDE_TX_BODY=false/' $DOCKER_COMPOSE_FILE
+    # Set default value for ROLLUP__STORAGE__DB_MAX_OPEN_FILES if not set
+    export ROLLUP__STORAGE__DB_MAX_OPEN_FILES=${ROLLUP__STORAGE__DB_MAX_OPEN_FILES:-100}
+
+    # Set ROLLUP__RUNNER__INCLUDE_TX_BODY to false if not needed
+    export ROLLUP__RUNNER__INCLUDE_TX_BODY=${ROLLUP__RUNNER__INCLUDE_TX_BODY:-true}
 
     echo "Running Docker Compose..."
     docker-compose up -d
@@ -78,49 +82,38 @@ uninstall_docker() {
     docker-compose down
 
     echo "Uninstalling Docker..."
-    sudo apt-get purge -y docker-ce docker-ce-cli containerd.io docker-compose-plugin
-    sudo apt-get autoremove -y --purge docker-ce docker-ce-cli containerd.io docker-compose-plugin
+    sudo apt-get purge -y docker-ce docker-ce-cli containerd.io
+    sudo apt-get autoremove -y --purge docker-ce docker-ce-cli containerd.io
     sudo rm -rf /var/lib/docker
     sudo rm -rf /etc/docker
     sudo rm -rf /etc/apt/keyrings/docker.gpg
     sudo rm /etc/apt/sources.list.d/docker.list
-    sudo rm -rf /usr/bin/docker-compose
+    sudo rm -rf /usr/local/bin/docker-compose
 
     echo "Docker and Docker Compose have been uninstalled."
 }
 
 # Main menu
 echo "Select an option:"
-echo "1. Install Docker"
+echo "1. Install Docker and Docker Compose"
 echo "2. Set up Docker Compose"
-echo "3. Restart Docker"
+echo "3. Restart Docker Compose"
 echo "4. Read logs"
-echo "5. Uninstall"
+echo "5. Uninstall Docker and Docker Compose"
 read -p "Enter your choice [1-5]: " choice
 
 case $choice in
     1)
-        install_docker
+        install_docker_and_docker_compose
+        setup_docker_compose
         ;;
     2)
-        if ! command -v docker-compose &> /dev/null; then
-            echo "Docker Compose not found. Please install Docker Compose first."
-            exit 1
-        fi
         setup_docker_compose
         ;;
     3)
-        if ! command -v docker-compose &> /dev/null; then
-            echo "Docker Compose not found. Please install Docker Compose first."
-            exit 1
-        fi
         restart_docker_compose
         ;;
     4)
-        if ! command -v docker-compose &> /dev/null; then
-            echo "Docker Compose not found. Please install Docker Compose first."
-            exit 1
-        fi
         read_docker_logs
         ;;
     5)
@@ -131,4 +124,3 @@ case $choice in
         exit 1
         ;;
 esac
-
