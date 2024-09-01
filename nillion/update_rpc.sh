@@ -1,5 +1,7 @@
 #!/bin/bash
 
+sudo apt install jq -y
+
 # Get all container IDs matching the filter
 container_ids=$(docker ps -a --filter "ancestor=nillion/retailtoken-accuser:v1.0.0" -q)
 
