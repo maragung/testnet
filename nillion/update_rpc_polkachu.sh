@@ -22,7 +22,7 @@ else
 fi
 
 # Get the latest block height
-LATEST_BLOCK=$(curl -s http://65.109.222.111:26657/status | jq -r .result.sync_info.latest_block_height)
+LATEST_BLOCK=$(curl -s https://nillion-testnet-rpc.polkachu.com/status | jq -r .result.sync_info.latest_block_height)
 
 # Run the Docker container with the latest block height
 docker run -v ./nillion/accuser:/var/tmp nillion/retailtoken-accuser:v1.0.0 accuse --rpc-endpoint "https://nillion-testnet-rpc.polkachu.com" --block-start $LATEST_BLOCK
