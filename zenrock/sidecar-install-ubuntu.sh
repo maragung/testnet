@@ -1,6 +1,4 @@
-#!/bin/bash 
-
-sudo apt-get update
+#!/bin/bash
 
 # Prompt user for necessary endpoints and configurations
 read -p "Enter TESTNET_HOLESKY_ENDPOINT: " TESTNET_HOLESKY_ENDPOINT
@@ -24,25 +22,6 @@ mkdir -p $HOME/.zrchain/sidecar/keys
 rm -f $HOME/.zrchain/sidecar/config.yaml
 rm -f $HOME/.zrchain/sidecar/eigen_operator_config.yaml
 
-# Build binary ecdsa
-cd $HOME/zenrock-validators/utils/keygen/ecdsa && go build
-
-# Build binary bls
-cd $HOME/zenrock-validators/utils/keygen/bls && go build
-
-# Generate ecdsa key
-ecdsa_output_file=$HOME/.zrchain/sidecar/keys/ecdsa.key.json
-ecdsa_creation=$($HOME/zenrock-validators/utils/keygen/ecdsa/ecdsa --password $key_pass -output-file $ecdsa_output_file)
-ecdsa_address=$(echo "$ecdsa_creation" | grep "Public address" | cut -d: -f2)
-
-# Generate bls key
-bls_output_file=$HOME/.zrchain/sidecar/keys/bls.key.json
-$HOME/zenrock-validators/utils/keygen/bls/bls --password $key_pass -output-file $bls_output_file
-
-# Tampilkan alamat ecdsa
-echo "ECDSA address: $ecdsa_address"
-echo "Please fund your wallet address with Holesky $ETH before proceeding."
-
 # Create or update config.yaml
 cat <<EOF > $HOME/.zrchain/sidecar/config.yaml
 grpc_port: 9191
@@ -52,12 +31,12 @@ network: "testnet"
 eth_oracle:
   rpc:
     local: "http://127.0.0.1:8545"
-    testnet: "$TESTNET_HOLESKY_ENDPOINT"
-    mainnet: "$MAINNET_ENDPOINT"
+    testnet: "${TESTNET_HOLESKY_ENDPOINT}"
+    mainnet: "${MAINNET_ENDPOINT}"
   contract_addrs:
     service_manager: "0x3AD648DfE0a6D80745ab2Ec97CB67c56bfBEc032"
     price_feed: "0x5f4eC3Df9cbd43714FE2740f5E3616155c5b8419"
-    network_name: "Holešky Ethereum Testnet"
+  network_name: "Holešky Ethereum Testnet"
 solana_rpc:
   testnet: "https://api.testnet.solana.com"
   mainnet: ""
@@ -97,8 +76,27 @@ EOF
 wget -O $HOME/.zrchain/sidecar/bin/validator_sidecar https://github.com/zenrocklabs/zrchain/releases/download/v5.3.4/validator_sidecar
 chmod +x $HOME/.zrchain/sidecar/bin/validator_sidecar
 
+# Build binary ecdsa
+cd $HOME/zenrock-validators/utils/keygen/ecdsa && go build
+
+# Build binary bls
+cd $HOME/zenrock-validators/utils/keygen/bls && go build
+
+# Generate ecdsa key
+ecdsa_output_file=$HOME/.zrchain/sidecar/keys/ecdsa.key.json
+ecdsa_creation=$($HOME/zenrock-validators/utils/keygen/ecdsa/ecdsa --password $key_pass -output-file $ecdsa_output_file)
+ecdsa_address=$(echo "$ecdsa_creation" | grep "Public address" | cut -d: -f2)
+
+# Generate bls key
+bls_output_file=$HOME/.zrchain/sidecar/keys/bls.key.json
+$HOME/zenrock-validators/utils/keygen/bls/bls --password $key_pass -output-file $bls_output_file
+
+# Display ECDSA address
+echo "ECDSA address: $ecdsa_address"
+echo "Please fund your wallet address with Holesky $ETH before proceeding."
+
 # Set up systemd service
-systemctl stop zenrock-sidecar 2>/dev/null
+sudo systemctl stop zenrock-sidecar 2>/dev/null
 cat <<EOF | sudo tee /etc/systemd/system/zenrock-sidecar.service > /dev/null
 [Unit]
 Description=Zenrock-sidecar
