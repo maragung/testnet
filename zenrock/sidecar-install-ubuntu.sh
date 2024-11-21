@@ -3,10 +3,10 @@
 
 
 # Prompt user for necessary endpoints and configurations
-read -p "Enter HTTPS TESTNET_HOLESKY_ENDPOINT: " TESTNET_HOLESKY_ENDPOINT
-read -p "Enter HTTPS MAINNET_ENDPOINT: " MAINNET_ENDPOINT
-read -p "Enter HTTPS HOLESKY ETH_RPC_URL: " ETH_RPC_URL
-read -p "Enter WS HOLESKY ETH_WS_URL: " ETH_WS_URL
+read -p "Enter HTTPS HOLESKY RPC URL: " TESTNET_HOLESKY_ENDPOINT
+read -p "Enter HTTPS MAINNET RPC URL: " MAINNET_ENDPOINT
+read -p "Enter HTTPS HOLESKY RPC URL: " ETH_RPC_URL
+read -p "Enter WSS HOLESKY RPC URL: " ETH_WS_URL
 
 # Prompt for password
 read -p "Enter password for the keys: " key_pass
