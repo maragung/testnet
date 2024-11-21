@@ -21,23 +21,16 @@ else
     echo "Zenrock-sidecar service not found."
 fi
 
-# Remove configuration files and directories
-echo "Removing configuration files and directories..."
 rm -rf $HOME/zenrock-validators
-
-# Remove leftover files
 rm -f $HOME/.zrchain/sidecar/config.yaml
 rm -f $HOME/.zrchain/sidecar/eigen_operator_config.yaml
 rm -f $HOME/.zrchain/sidecar/keys/ecdsa.key.json
 rm -f $HOME/.zrchain/sidecar/keys/bls.key.json
 
-# Optionally remove downloaded binary
 if [[ -f "$HOME/.zrchain/sidecar/bin/validator_sidecar" ]]; then
     echo "Removing validator_sidecar binary..."
     rm -f $HOME/.zrchain/sidecar/bin/validator_sidecar
 fi
-
-echo "All related files and configurations have been removed."
 
 
 # Clone the repository
