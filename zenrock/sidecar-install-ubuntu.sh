@@ -1,7 +1,5 @@
 #!/bin/bash
 
-
-
 # Prompt user for necessary endpoints and configurations
 read -p "Enter HTTPS HOLESKY RPC URL: " TESTNET_HOLESKY_ENDPOINT
 read -p "Enter HTTPS MAINNET RPC URL: " MAINNET_ENDPOINT
@@ -103,6 +101,7 @@ ecdsa_address=$(echo "$ecdsa_creation" | grep "Public address" | cut -d: -f2)
 bls_output_file=$HOME/.zrchain/sidecar/keys/bls.key.json
 $HOME/zenrock-validators/utils/keygen/bls/bls --password $key_pass -output-file $bls_output_file
 
+echo "Trying to get validator address, input password $WALLET"
 OPERATOR_VALIDATOR_ADDRESS=zenrockd q validation validator $(zenrockd keys show $WALLET --bech val -a)
 echo "Validator address: $OPERATOR_VALIDATOR_ADDRESS"
 
