@@ -87,14 +87,14 @@ cd $HOME/zenrock-validators/utils/keygen/bls && go build
 # Generate ecdsa key
 ecdsa_output_file=$HOME/.zrchain/sidecar/keys/ecdsa.key.json
 ecdsa_creation=$($HOME/zenrock-validators/utils/keygen/ecdsa/ecdsa --password $key_pass -output-file $ecdsa_output_file)
-ecdsa_address=$(echo "$ecdsa_creation" | grep "Public address" | cut -d: -f2)
+ecdsa_address=$(echo "$ecdsa_creation" | grep "Public address" | cut -d: -f2 | tr -d ' ')
 
 # Generate bls key
 bls_output_file=$HOME/.zrchain/sidecar/keys/bls.key.json
 $HOME/zenrock-validators/utils/keygen/bls/bls --password $key_pass -output-file $bls_output_file
 
 echo "Trying to get validator address, input password $WALLET"
-OPERATOR_VALIDATOR_ADDRESS=zenrockd q validation validator $(zenrockd keys show $WALLET --bech val -a)
+OPERATOR_VALIDATOR_ADDRESS=$(zenrockd q validation validator $(zenrockd keys show $WALLET --bech val -a))
 echo "Validator address: $OPERATOR_VALIDATOR_ADDRESS"
 
 # Create or update eigen_operator_config.yaml
