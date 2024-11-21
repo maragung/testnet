@@ -1,9 +1,9 @@
 #!/bin/bash
 
 # Prompt user for necessary endpoints and configurations
-read -p "Enter TESTNET_HOLESKY_ENDPOINT: " TESTNET_HOLESKY_ENDPOINT
-read -p "Enter MAINNET_ENDPOINT: " MAINNET_ENDPOINT
-read -p "Enter ETH_RPC_URL: " ETH_RPC_URL
+read -p "Enter HTTPS TESTNET_HOLESKY_ENDPOINT: " TESTNET_HOLESKY_ENDPOINT
+read -p "Enter HTTPS MAINNET_ENDPOINT: " MAINNET_ENDPOINT
+read -p "Enter HTTPS HOLESKY ETH_RPC_URL: " ETH_RPC_URL
 read -p "Enter ETH_WS_URL: " ETH_WS_URL
 
 # Prompt for password
@@ -48,29 +48,7 @@ neutrino:
   path: "/root/.zrchain/sidecar/neutrino"
 EOF
 
-# Create or update eigen_operator_config.yaml
-cat <<EOF > $HOME/.zrchain/sidecar/eigen_operator_config.yaml
-register_operator_on_startup: true
-register_on_startup: true
-production: true
-operator_address: "OPERATOR_ADDRESS"
-operator_validator_address: "OPERATOR_VALIDATOR_ADDRESS"
-avs_registry_coordinator_address: 0xFbB0cbF0d14C8BaE1f36Cd4Dff792ca412b72Af0
-operator_state_retriever_address: 0xe7FDe0EFCECBbcC25F326EdC80E6B79c1482dAaB
-eth_rpc_url: "$ETH_RPC_URL"
-eth_ws_url: "$ETH_WS_URL"
-ecdsa_private_key_store_path: "/root/.zrchain/sidecar/keys/ecdsa.key.json"
-bls_private_key_store_path: "/root/.zrchain/sidecar/keys/bls.key.json"
-aggregator_server_ip_port_address: avs-aggregator.gardia.zenrocklabs.io:8090
-eigen_metrics_ip_port_address: 0.0.0.0:9292
-enable_metrics: true
-metrics_address: 0.0.0.0:9292
-node_api_ip_port_address: 0.0.0.0:9191
-enable_node_api: true
-token_strategy_addr: 0x80528D6e9A2BAbFc766965E0E26d5aB08D9CFaF9
-service_manager_address: 0x3AD648DfE0a6D80745ab2Ec97CB67c56bfBEc032
-zr_chain_rpc_address: localhost:9790
-EOF
+
 
 # Download binary
 wget -O $HOME/.zrchain/sidecar/bin/validator_sidecar https://github.com/zenrocklabs/zrchain/releases/download/v5.3.4/validator_sidecar
@@ -90,6 +68,34 @@ ecdsa_address=$(echo "$ecdsa_creation" | grep "Public address" | cut -d: -f2)
 # Generate bls key
 bls_output_file=$HOME/.zrchain/sidecar/keys/bls.key.json
 $HOME/zenrock-validators/utils/keygen/bls/bls --password $key_pass -output-file $bls_output_file
+
+OPERATOR_VALIDATOR_ADDRESS=zenrockd q validation validator $(zenrockd keys show $WALLET --bech val -a)
+echo "Validator address: $OPERATOR_VALIDATOR_ADDRESS"
+
+# Create or update eigen_operator_config.yaml
+cat <<EOF > $HOME/.zrchain/sidecar/eigen_operator_config.yaml
+register_operator_on_startup: true
+register_on_startup: true
+production: true
+operator_address: "$ecdsa_address"
+operator_validator_address: "$OPERATOR_VALIDATOR_ADDRESS"
+avs_registry_coordinator_address: 0xFbB0cbF0d14C8BaE1f36Cd4Dff792ca412b72Af0
+operator_state_retriever_address: 0xe7FDe0EFCECBbcC25F326EdC80E6B79c1482dAaB
+eth_rpc_url: "$ETH_RPC_URL"
+eth_ws_url: "$ETH_WS_URL"
+ecdsa_private_key_store_path: "/root/.zrchain/sidecar/keys/ecdsa.key.json"
+bls_private_key_store_path: "/root/.zrchain/sidecar/keys/bls.key.json"
+aggregator_server_ip_port_address: avs-aggregator.gardia.zenrocklabs.io:8090
+eigen_metrics_ip_port_address: 0.0.0.0:9292
+enable_metrics: true
+metrics_address: 0.0.0.0:9292
+node_api_ip_port_address: 0.0.0.0:9191
+enable_node_api: true
+token_strategy_addr: 0x80528D6e9A2BAbFc766965E0E26d5aB08D9CFaF9
+service_manager_address: 0x3AD648DfE0a6D80745ab2Ec97CB67c56bfBEc032
+zr_chain_rpc_address: localhost:9790
+EOF
+
 
 # Display ECDSA address
 echo "ECDSA address: $ecdsa_address"
