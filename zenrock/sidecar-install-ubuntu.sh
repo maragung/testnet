@@ -23,7 +23,6 @@ fi
 
 # Remove configuration files and directories
 echo "Removing configuration files and directories..."
-rm -rf $HOME/.zrchain
 rm -rf $HOME/zenrock-validators
 
 # Remove leftover files
