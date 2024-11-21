@@ -1,13 +1,47 @@
 #!/bin/bash
 
+
+
 # Prompt user for necessary endpoints and configurations
 read -p "Enter HTTPS TESTNET_HOLESKY_ENDPOINT: " TESTNET_HOLESKY_ENDPOINT
 read -p "Enter HTTPS MAINNET_ENDPOINT: " MAINNET_ENDPOINT
 read -p "Enter HTTPS HOLESKY ETH_RPC_URL: " ETH_RPC_URL
-read -p "Enter ETH_WS_URL: " ETH_WS_URL
+read -p "Enter WS HOLESKY ETH_WS_URL: " ETH_WS_URL
 
 # Prompt for password
 read -p "Enter password for the keys: " key_pass
+
+# Stop the systemd service if it exists
+if systemctl list-units --type=service | grep -q "zenrock-sidecar.service"; then
+    echo "Stopping Zenrock-sidecar service..."
+    sudo systemctl stop zenrock-sidecar
+    sudo systemctl disable zenrock-sidecar
+    sudo rm /etc/systemd/system/zenrock-sidecar.service
+    sudo systemctl daemon-reload
+    echo "Zenrock-sidecar service removed."
+else
+    echo "Zenrock-sidecar service not found."
+fi
+
+# Remove configuration files and directories
+echo "Removing configuration files and directories..."
+rm -rf $HOME/.zrchain
+rm -rf $HOME/zenrock-validators
+
+# Remove leftover files
+rm -f $HOME/.zrchain/sidecar/config.yaml
+rm -f $HOME/.zrchain/sidecar/eigen_operator_config.yaml
+rm -f $HOME/.zrchain/sidecar/keys/ecdsa.key.json
+rm -f $HOME/.zrchain/sidecar/keys/bls.key.json
+
+# Optionally remove downloaded binary
+if [[ -f "$HOME/.zrchain/sidecar/bin/validator_sidecar" ]]; then
+    echo "Removing validator_sidecar binary..."
+    rm -f $HOME/.zrchain/sidecar/bin/validator_sidecar
+fi
+
+echo "All related files and configurations have been removed."
+
 
 # Clone the repository
 cd $HOME
