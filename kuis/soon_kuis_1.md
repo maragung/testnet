@@ -1,4 +1,3 @@
-Berikut adalah ringkasan lengkap dari ketiga artikel yang Anda berikan:
 
 ### **1. SOON Testnet is Now Live: A Key Step to SAS**
 Artikel ini mengumumkan peluncuran resmi **SOON Testnet**, yang merupakan tonggak penting dalam perjalanan menuju visi **Super Adoption Stack (SAS)**. Testnet ini diluncurkan setelah keberhasilan **SOON Devnet** dan mencakup pencapaian besar dalam teknologi **Decoupled SVM**. Decoupling SVM merupakan langkah besar dalam mengatasi salah satu tantangan utama untuk adopsi massal blockchain, yaitu **eksekusi yang berkinerja tinggi**. SOON Testnet merupakan rollup SVM pertama yang menggunakan **Decoupled SVM** untuk mengoptimalkan pemrosesan transaksi dan meningkatkan keamanan, yang berbeda dari pendekatan forked SVM yang digunakan oleh banyak proyek lainnya.
