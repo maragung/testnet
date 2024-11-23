@@ -1,3 +1,50 @@
+Berikut adalah ringkasan lengkap dari ketiga artikel yang Anda berikan:
+
+### **1. SOON Testnet is Now Live: A Key Step to SAS**
+Artikel ini mengumumkan peluncuran resmi **SOON Testnet**, yang merupakan tonggak penting dalam perjalanan menuju visi **Super Adoption Stack (SAS)**. Testnet ini diluncurkan setelah keberhasilan **SOON Devnet** dan mencakup pencapaian besar dalam teknologi **Decoupled SVM**. Decoupling SVM merupakan langkah besar dalam mengatasi salah satu tantangan utama untuk adopsi massal blockchain, yaitu **eksekusi yang berkinerja tinggi**. SOON Testnet merupakan rollup SVM pertama yang menggunakan **Decoupled SVM** untuk mengoptimalkan pemrosesan transaksi dan meningkatkan keamanan, yang berbeda dari pendekatan forked SVM yang digunakan oleh banyak proyek lainnya.
+
+**Fitur utama** dari SOON Testnet termasuk:
+- **Pengurangan biaya Data Availability (DA)** dengan mengoptimalkan ruang blobspace di lapisan DA, mengurangi biaya operasional yang diteruskan ke pengguna.
+- **Keamanan yang Ditingkatkan** dengan fault proofs, yang memungkinkan transaksi untuk diverifikasi dan memperkuat keamanan jaringan.
+- **Eksekusi Terdistribusi** yang memungkinkan skalabilitas horizontal, dengan mendistribusikan beban pemrosesan transaksi ke banyak mesin.
+- **Benchmarking** awal menunjukkan kinerja dengan **30.000 TPS** dan waktu blok 50 ms.
+
+Testnet ini mengimplementasikan **Decoupled SVM**, yang memberikan fleksibilitas tinggi dan skalabilitas, serta mempersiapkan jaringan untuk mendukung **cross-chain interoperability**, yang merupakan pilar utama dari **Super Adoption Stack**.
+
+Untuk memulai menggunakan SOON Testnet, pengembang dapat mengakses berbagai sumber daya termasuk **Testnet RPC**, **Testnet Bridge**, **Testnet Explorer**, dan **faucet Sepolia ETH**. Pengguna yang sebelumnya berpartisipasi di SOON Devnet harus menarik aset mereka sebelum melakukan deposit ke SOON Testnet.
+
+---
+
+### **2. Why and How to Decouple SVM Execution Layer for an Optimistic Rollup**
+Artikel ini menjelaskan secara mendalam tentang **Decoupled SVM** dan alasan mengapa dan bagaimana lapisan eksekusi Solana Virtual Machine (SVM) perlu dipisahkan untuk menjadi bagian dari **Optimistic Rollup**. **Decoupling SVM** adalah proses pemisahan **Transaction Processing Unit (TPU)** dari lapisan eksekusi utama untuk meningkatkan kinerja dan keamanan dalam ekosistem rollup. Salah satu manfaat besar dari pendekatan ini adalah pengurangan **biaya data availability** dan peningkatan skalabilitas horizontal, yang memungkinkan lebih banyak mesin untuk menangani beban pemrosesan transaksi.
+
+**Kelebihan Decoupling SVM**:
+- Meningkatkan **keamanan** dengan mendukung fault proofs.
+- Menurunkan **biaya operasional** dengan mengurangi penggunaan blobspace.
+- Memberikan **skala horizontal** yang lebih baik, memungkinkan rollup untuk menangani lebih banyak transaksi secara efisien.
+- Mempermudah integrasi dengan **Layer 1 lainnya**, menciptakan solusi yang lebih fleksibel.
+
+Artikel ini juga menyoroti pentingnya memisahkan eksekusi lapisan SVM agar lebih mudah beradaptasi dengan berbagai jaringan blockchain yang ada, menciptakan **interoperabilitas** dan meningkatkan kinerja sistem rollup.
+
+---
+
+### **3. Super Adoption Stack (SAS): Path to Mass Adoption**
+Artikel ini membahas **Super Adoption Stack (SAS)**, visi untuk masa depan blockchain yang sepenuhnya **interoperable** dan memungkinkan komunikasi mulus antar jaringan. SAS berfokus pada dua pilar utama untuk mencapai adopsi massal:
+1. **Lapisan Eksekusi Berperforma Tinggi**: Decoupled SVM yang digunakan dalam SOON Testnet merupakan pencapaian penting untuk memenuhi kebutuhan ini. Dengan meningkatkan kemampuan eksekusi dan mengurangi biaya operasional, SAS akan memungkinkan adopsi yang lebih luas.
+2. **Interoperabilitas Cross-Chain**: SAS berusaha untuk menghubungkan berbagai blockchain, memungkinkan mereka untuk berkomunikasi dan beroperasi bersama dengan cara yang lebih efisien.
+
+SOON Testnet merupakan bagian integral dari **SAS**, karena mengimplementasikan **Decoupled SVM** yang memungkinkan fleksibilitas dan skalabilitas tinggi dalam ekosistem blockchain. Tujuan utama dari SAS adalah untuk menciptakan ekosistem blockchain yang lebih terintegrasi dan berdaya saing tinggi, dengan mengatasi masalah performa dan interoperabilitas yang selama ini menghambat kemajuan teknologi blockchain.
+
+Artikel ini juga mengungkapkan bahwa kinerja Testnet saat ini mencapai **30.000 TPS** dengan waktu blok 50 ms, dan tim berharap dapat terus meningkatkan performa ke tingkat yang lebih tinggi di masa depan.
+
+---
+
+**Kesimpulan Umum**:
+- SOON Testnet merupakan pencapaian besar dalam pengembangan **Decoupled SVM**, sebuah inovasi yang memberikan efisiensi lebih tinggi dalam ekosistem blockchain.
+- **Super Adoption Stack (SAS)** bertujuan untuk menciptakan masa depan blockchain yang lebih terhubung dan scalable, dengan fokus pada **eksekusi berperforma tinggi** dan **interoperabilitas**.
+- Dengan SOON Testnet yang sudah dapat diakses, pengembang dan pengguna dapat mulai mengeksplorasi potensi besar dari teknologi ini, dengan berbagai alat dan sumber daya yang tersedia.
+
+
 ### Pertanyaan 1 - 20: Super Adoption Stack (SAS)
 1. **Apa tujuan utama dari Super Adoption Stack (SAS)?**
    - A) Meningkatkan adopsi cryptocurrency
