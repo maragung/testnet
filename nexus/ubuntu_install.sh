@@ -25,9 +25,18 @@ screen -S nexus -d -m bash -c "
     sudo apt install curl iptables build-essential git wget lz4 jq make gcc nano automake autoconf tmux htop nvme-cli pkg-config libssl-dev libleveldb-dev tar clang bsdmainutils ncdu unzip -y
     sudo apt install build-essential protobuf-compiler -y
 
-    # Install Rust
+    # Install Rust using expect to handle the interactive prompt
     echo 'Installing Rust...'
-    echo '1' | sudo curl https://sh.rustup.rs -sSf | sh
+    sudo apt install expect -y
+    expect -c '
+        spawn curl https://sh.rustup.rs -sSf | sh
+        expect {
+            \"Proceed with installation (default)\" { send \"1\r\"; exp_continue }
+            \"Modify PATH variable\" { send \"\r\"; exp_continue }
+            \"Do you want to continue?\" { send \"\r\"; exp_continue }
+        }
+    '
+
     source \$HOME/.cargo/env
     export PATH=\"\$HOME/.cargo/bin:\$PATH\"
 
@@ -40,3 +49,5 @@ screen -S nexus -d -m bash -c "
 "
 
 echo "Installation started in the 'nexus' screen session. You can check the progress by attaching to it."
+
+screen -rd nexus
