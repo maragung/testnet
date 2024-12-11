@@ -1,12 +1,23 @@
 #!/bin/bash
 
-
 # Update and install required packages
 echo "Updating package list..."
 sudo apt-get update
 
 echo "Installing screen..."
 sudo apt install screen -y
+
+# Create Nexus directory
+mkdir -p $HOME/.nexus/
+
+# Ask for Prover ID and save it
+echo 'Enter Prover ID:'
+read prover_id
+echo $prover_id > $HOME/.nexus/prover-id
+
+# Open Prover ID in nano for user to edit and save
+echo "Rechecking Prover ID:"
+cat $HOME/.nexus/prover-id
 
 # Create a new screen session named "nexus" and execute commands inside it
 screen -S nexus -d -m bash -c "
@@ -16,20 +27,9 @@ screen -S nexus -d -m bash -c "
 
     # Install Rust
     echo 'Installing Rust...'
-    sudo curl https://sh.rustup.rs -sSf | sh
+    echo '1' | sudo curl https://sh.rustup.rs -sSf | sh
     source \$HOME/.cargo/env
     export PATH=\"\$HOME/.cargo/bin:\$PATH\"
-
-    # Create Nexus directory
-    mkdir -p \$HOME/.nexus/
-
-    # Ask for Prover ID and save it
-    echo 'Enter Prover ID:'
-    read prover_id
-    echo \$prover_id > \$HOME/.nexus/prover-id
-
-    # Open Prover ID in nano for user to edit and save
-    nano \$HOME/.nexus/prover-id
 
     # Install Nexus CLI
     echo 'Installing Nexus CLI...'
