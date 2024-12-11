@@ -1,5 +1,6 @@
 #!/bin/bash
 
+
 # Update and install required packages
 echo "Updating package list..."
 sudo apt-get update
