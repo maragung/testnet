@@ -8,29 +8,36 @@ echo "Menginstal screen..."
 sudo apt install screen -y
 
 # Membuat screen baru bernama nexus
-screen -S nexus -d -m
+echo "Membuat screen bernama 'nexus' dan masuk ke dalamnya..."
+screen -S nexus
 
-# Memasang paket yang diperlukan di dalam screen
-screen -S nexus -X stuff "sudo apt install curl iptables build-essential git wget lz4 jq make gcc nano automake autoconf tmux htop nvme-cli pkg-config libssl-dev libleveldb-dev tar clang bsdmainutils ncdu unzip -y\n"
-screen -S nexus -X stuff "sudo apt install build-essential protobuf-compiler -y\n"
+# Di dalam screen, eksekusi perintah berikut
+echo "Menginstal paket yang diperlukan di dalam screen..."
+sudo apt install curl iptables build-essential git wget lz4 jq make gcc nano automake autoconf tmux htop nvme-cli pkg-config libssl-dev libleveldb-dev tar clang bsdmainutils ncdu unzip -y
+sudo apt install build-essential protobuf-compiler -y
 
 # Menginstal Rust
-screen -S nexus -X stuff "sudo curl https://sh.rustup.rs -sSf | sh\n"
-screen -S nexus -X stuff "source \$HOME/.cargo/env\n"
-screen -S nexus -X stuff "export PATH=\"\$HOME/.cargo/bin:\$PATH\"\n"
+echo "Menginstal Rust..."
+sudo curl https://sh.rustup.rs -sSf | sh
+source $HOME/.cargo/env
+export PATH="$HOME/.cargo/bin:$PATH"
 
 # Membuat direktori untuk Nexus
-screen -S nexus -X stuff "mkdir -p \$HOME/.nexus/\n"
+mkdir -p "$HOME/.nexus/"
 
 # Meminta input untuk Prover ID
 echo "Masukkan Prover ID yang ingin disimpan:"
 read prover_id
 
 # Menyimpan Prover ID ke file
-screen -S nexus -X stuff "echo \"$prover_id\" > \$HOME/.nexus/prover-id\n"
-screen -S nexus -X stuff "nano \$HOME/.nexus/prover-id\n"
+echo "$prover_id" > $HOME/.nexus/prover-id
+
+# Menjalankan editor untuk Prover ID
+nano $HOME/.nexus/prover-id
 
 # Menginstal CLI Nexus
-screen -S nexus -X stuff "sudo curl https://cli.nexus.xyz/install.sh | sh\n"
+echo "Menginstal Nexus CLI..."
+sudo curl https://cli.nexus.xyz/install.sh | sh
 
-echo "Proses instalasi selesai. Screen 'nexus' sedang berjalan, dan Prover ID telah disimpan."
+echo "Instalasi selesai. Anda telah berada di dalam sesi screen 'nexus'."
+echo "Gunakan perintah 'exit' untuk keluar dari sesi screen dan kembali ke terminal utama."
