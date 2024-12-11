@@ -1,67 +1,42 @@
 #!/bin/bash
 
-# Memperbarui repositori dan menginstal dependensi
+# Memperbarui sistem dan menginstal paket dasar
+echo "Memperbarui sistem..."
 sudo apt-get update
-sudo apt install -y \
-    curl iptables build-essential git wget lz4 jq make gcc nano automake autoconf \
-    tmux htop nvme-cli pkg-config libssl-dev libleveldb-dev tar clang bsdmainutils \
-    ncdu unzip build-essential protobuf-compiler
 
-# Instalasi Rust
-if ! command -v cargo &> /dev/null; then
-    echo "Rust tidak ditemukan, menginstal Rust..."
-    curl https://sh.rustup.rs -sSf | sh -s -- -y
-    source "$HOME/.cargo/env"
-else
-    echo "Rust sudah terinstal."
-fi
+echo "Menginstal screen..."
+sudo apt install -y screen
+
+# Membuat screen baru bernama 'nexus'
+screen -S nexus -d -m
+
+# Menginstal dependensi lain yang diperlukan
+echo "Menginstal dependensi lainnya..."
+sudo apt install -y curl iptables build-essential git wget lz4 jq make gcc nano automake autoconf tmux htop nvme-cli pkg-config libssl-dev libleveldb-dev tar clang bsdmainutils ncdu unzip
+
+# Menginstal protobuf-compiler
+sudo apt install -y build-essential protobuf-compiler
+
+# Menginstal Rust
+echo "Menginstal Rust..."
+sudo curl https://sh.rustup.rs -sSf | sh
+source $HOME/.cargo/env
 
 # Menambahkan Rust ke PATH
 export PATH="$HOME/.cargo/bin:$PATH"
 
-# Membuat direktori konfigurasi Nexus
-NEXUS_DIR="$HOME/.nexus"
-mkdir -p "$NEXUS_DIR"
+# Membuat direktori untuk Nexus
+mkdir -p "$HOME/.nexus/"
 
 # Meminta input Prover ID
 echo "Masukkan Prover ID Anda:"
-read -r PROVER_ID
+read prover_id
 
-# Menyimpan Prover ID ke file
-PROVER_ID_FILE="$NEXUS_DIR/prover-id"
-echo "$PROVER_ID" > "$PROVER_ID_FILE"
-echo "Prover ID telah disimpan di $PROVER_ID_FILE"
+# Menyimpan Prover ID ke dalam file
+echo $prover_id | sudo tee $HOME/.nexus/prover-id > /dev/null
 
-# Mengunduh binary dan memindahkannya ke /usr/local/bin
-BINARY_URL="https://github.com/maragung/testnet/raw/refs/heads/main/bin/ubuntu_nx_prover_x86_64"
-BINARY_PATH="/usr/local/bin/ubuntu_nx_prover"
-echo "Mengunduh binary dari $BINARY_URL..."
-curl -L "$BINARY_URL" -o "$BINARY_PATH"
-sudo chmod +x "$BINARY_PATH"
-echo "Binary telah diunduh dan dipindahkan ke $BINARY_PATH"
+# Menginstal CLI Nexus
+echo "Menginstal Nexus CLI..."
+sudo curl https://cli.nexus.xyz/install.sh | sh
 
-# Membuat service systemd
-SERVICE_FILE="/etc/systemd/system/nexus-prover.service"
-echo "Membuat service systemd untuk Nexus Prover..."
-echo "[Unit]
-Description=Nexus Prover Service
-After=network.target
-
-[Service]
-Type=simple
-ExecStart=$BINARY_PATH -- beta.orchestrator.nexus.xyz
-Restart=on-failure
-RestartSec=3
-User=$(whoami)
-
-[Install]
-WantedBy=multi-user.target" | sudo tee "$SERVICE_FILE"
-
-# Reload dan enable service
-sudo systemctl daemon-reload
-sudo systemctl enable nexus-prover
-sudo systemctl start nexus-prover
-
-# Memberikan pesan selesai
-echo "Instalasi dan konfigurasi selesai. Prover ID Anda: $PROVER_ID"
-echo "Service Nexus Prover telah dibuat dan berjalan."
+echo "Instalasi selesai."
