@@ -1,43 +1,41 @@
 #!/bin/bash
 
-# Memperbarui dan menginstal paket yang dibutuhkan
-echo "Memperbarui daftar paket..."
+# Update and install required packages
+echo "Updating package list..."
 sudo apt-get update
 
-echo "Menginstal screen..."
+echo "Installing screen..."
 sudo apt install screen -y
 
-# Membuat screen baru bernama nexus
-echo "Membuat screen bernama 'nexus' dan masuk ke dalamnya..."
-screen -S nexus
+# Create a new screen session named "nexus" and execute commands inside it
+screen -S nexus -d -m bash -c "
+    echo 'Installing required packages...'
+    sudo apt install curl iptables build-essential git wget lz4 jq make gcc nano automake autoconf tmux htop nvme-cli pkg-config libssl-dev libleveldb-dev tar clang bsdmainutils ncdu unzip -y
+    sudo apt install build-essential protobuf-compiler -y
 
-# Di dalam screen, eksekusi perintah berikut
-echo "Menginstal paket yang diperlukan di dalam screen..."
-sudo apt install curl iptables build-essential git wget lz4 jq make gcc nano automake autoconf tmux htop nvme-cli pkg-config libssl-dev libleveldb-dev tar clang bsdmainutils ncdu unzip -y
-sudo apt install build-essential protobuf-compiler -y
+    # Install Rust
+    echo 'Installing Rust...'
+    sudo curl https://sh.rustup.rs -sSf | sh
+    source \$HOME/.cargo/env
+    export PATH=\"\$HOME/.cargo/bin:\$PATH\"
 
-# Menginstal Rust
-echo "Menginstal Rust..."
-sudo curl https://sh.rustup.rs -sSf | sh
-source $HOME/.cargo/env
-export PATH="$HOME/.cargo/bin:$PATH"
+    # Create Nexus directory
+    mkdir -p \$HOME/.nexus/
 
-# Membuat direktori untuk Nexus
-mkdir -p "$HOME/.nexus/"
+    # Ask for Prover ID and save it
+    echo 'Enter Prover ID:'
+    read prover_id
+    echo \$prover_id > \$HOME/.nexus/prover-id
 
-# Meminta input untuk Prover ID
-echo "Masukkan Prover ID yang ingin disimpan:"
-read prover_id
+    # Open Prover ID in nano for user to edit and save
+    nano \$HOME/.nexus/prover-id
 
-# Menyimpan Prover ID ke file
-echo "$prover_id" > $HOME/.nexus/prover-id
+    # Install Nexus CLI
+    echo 'Installing Nexus CLI...'
+    sudo curl https://cli.nexus.xyz/install.sh | sh
 
-# Menjalankan editor untuk Prover ID
-nano $HOME/.nexus/prover-id
+    echo 'Installation complete. You are now in the "nexus" screen session.'
+    echo 'You can use "exit" to leave the screen session.'
+"
 
-# Menginstal CLI Nexus
-echo "Menginstal Nexus CLI..."
-sudo curl https://cli.nexus.xyz/install.sh | sh
-
-echo "Instalasi selesai. Anda telah berada di dalam sesi screen 'nexus'."
-echo "Gunakan perintah 'exit' untuk keluar dari sesi screen dan kembali ke terminal utama."
+echo "Installation started in the 'nexus' screen session. You can check the progress by attaching to it."
