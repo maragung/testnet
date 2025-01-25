@@ -24,7 +24,7 @@ echo_info "Updating system packages..."
 apt update && apt upgrade -y
 
 echo_info "Installing XRDP, XFCE, and additional XFCE panels..."
-apt install -y xrdp xfce4 xfce4-goodies xfce4-panel xfce4-dockbarx-plugin xfce4-whiskermenu-plugin xfce4-indicator-plugin xfce4-taskmanager
+apt install -y xrdp xfce4 xfce4-goodies xfce4-panel xfce4-whiskermenu-plugin xfce4-indicator-plugin xfce4-taskmanager
 
 # Configure XRDP
 echo_info "Configuring XRDP to use XFCE..."
